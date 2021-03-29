@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Textures/MenuBackground.png" type="Texture" id=1]
+[ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=2]
+
+[node name="game" type="Node2D"]
+
+[node name="Background" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Background"]
+motion_mirroring = Vector2( 1010, 0 )
+
+[node name="Sprite" type="Sprite" parent="Background/ParallaxLayer"]
+scale = Vector2( 0.291904, 0.241935 )
+texture = ExtResource( 1 )
+centered = false
+
+[node name="KinematicBody2D" parent="." instance=ExtResource( 2 )]
+position = Vector2( 8, 256 )
+speed = 400
