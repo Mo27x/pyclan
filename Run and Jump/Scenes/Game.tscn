@@ -5,10 +5,10 @@
 [ext_resource path="res://Scripts/background.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/Death.gd" type="Script" id=4]
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16, 300 )
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 532, 8 )
 
 [node name="game" type="Node2D"]
@@ -38,20 +38,20 @@ position = Vector2( 0, 600 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="walls"]
 position = Vector2( 1016, -296 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="walls"]
 position = Vector2( 500, 8 )
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="walls"]
 position = Vector2( 500, -608 )
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="Death" type="CollisionShape2D" parent="Area2D"]
 position = Vector2( -80, 304 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 script = ExtResource( 4 )
 [connection signal="body_entered" from="Area2D" to="Area2D/Death" method="_on_Area2D_body_entered"]

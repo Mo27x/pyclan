@@ -5,11 +5,6 @@ var filePath = "res://Keybinds.ini"
 var configfile
 var keybinds = {}
 
-func _input(event):
-	if Input.is_key_pressed(KEY_ESCAPE):
-		add_child(settingsmenu.instance())
-		get_tree().paused = true
-
 func _ready():
 	configfile =ConfigFile.new()
 	if configfile.load(filePath) == OK:

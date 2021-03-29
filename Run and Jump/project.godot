@@ -69,7 +69,7 @@ down={
 
 [physics]
 
-2d/default_gravity=20
+2d/default_gravity=50
 
 [rendering]
 

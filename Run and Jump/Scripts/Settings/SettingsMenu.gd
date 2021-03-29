@@ -1,7 +1,7 @@
 extends CanvasLayer
 
 onready var optionContainer = $Panel/MarginContainer/VBoxContainer/Options
-onready var optionButton = load("res://Scripts/KeyButton.gd")
+onready var optionButton = load("res://Scripts/Settings/KeyButton.gd")
 
 var keybinds
 var buttons = {}
