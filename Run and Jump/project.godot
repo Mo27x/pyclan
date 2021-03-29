@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "CollisionShape2D",
+"class": "Death",
+"language": "GDScript",
+"path": "res://Scripts/Death.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Player",
 "language": "GDScript",
 "path": "res://Scripts/Player.gd"
 } ]
 _global_script_class_icons={
+"Death": "",
 "Player": ""
 }
 
@@ -23,6 +29,15 @@ _global_script_class_icons={
 config/name="Run and Jump"
 run/main_scene="res://Scenes/Menu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://Scripts/Global.gd"
+
+[display]
+
+window/size/width=1000
+window/size/resizable=false
 
 [input]
 
@@ -51,6 +66,10 @@ down={
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777234,"unicode":0,"echo":false,"script":null)
  ]
 }
+
+[physics]
+
+2d/default_gravity=20
 
 [rendering]
 

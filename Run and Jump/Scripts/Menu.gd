@@ -9,6 +9,7 @@ func _on_Play_pressed():
 	pass 
 
 func _on_Setting_pressed():
+	get_tree().change_scene("res://Scenes/SettingsMenu.tscn")
 	pass 
 
 func _on_Customise_pressed():

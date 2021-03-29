@@ -1,22 +1,32 @@
 extends KinematicBody2D
 class_name Player
 
-export (int) var speed = 200
+const Floor = Vector2(0, -1)
+var gravity_magnitude : int = ProjectSettings.get_setting("physics/2d/default_gravity")
+export (int) var speed = 300
+export (int) var jump_height = -1000
 
+onready var animazioni = $AnimatedSprite
 var velocity = Vector2()
+var on_ground = false
 
 func get_input():
 	velocity = Vector2()
 	if Input.is_action_pressed('right'):
-		velocity.x += 1
+		animazioni.play("Run")
+		velocity.x += speed
 	if Input.is_action_pressed('left'):
-		velocity.x -= 1
+		animazioni.play("Run")
+		velocity.x -= speed
 	if Input.is_action_pressed('down'):
-		velocity.y += 1
-	if Input.is_action_pressed('up'):
-		velocity.y -= 1
-	velocity = velocity.normalized() * speed
+		velocity.y += speed
+	if Input.is_action_pressed('up') && is_on_floor():
+		velocity.y = jump_height
+	
+	velocity.y +=  gravity_magnitude
+	
+
 
 func _physics_process(delta):
 	get_input()
-	velocity = move_and_slide(velocity)
+	velocity = move_and_slide(velocity,Floor)
