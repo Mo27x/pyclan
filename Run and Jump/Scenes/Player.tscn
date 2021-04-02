@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Textures/Player/run3.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=2]
@@ -6,10 +6,7 @@
 [ext_resource path="res://Textures/Player/run2.png" type="Texture" id=4]
 [ext_resource path="res://Textures/Player/run1.png" type="Texture" id=5]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 24, 72 )
-
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 4 ), ExtResource( 3 ), ExtResource( 1 ), ExtResource( 5 ) ],
 "loop": true,
@@ -24,12 +21,15 @@ __meta__ = {
 }
 jump_height = -5000
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+position = Vector2( -1.43051e-06, -2.18704 )
+scale = Vector2( 1, 0.975911 )
+build_mode = 1
+polygon = PoolVector2Array( -8.38423, -44.7396, -13.1464, -48.3269, -18.5039, -57.0959, -18.3055, -66.6621, -11.7575, -74.2353, -3.82045, -77.8226, 2.52915, -76.8261, 11.0614, -70.4487, 13.8394, -61.2811, 12.252, -53.11, 7.48978, -47.3304, 2.33072, -44.5403, 4.71183, -26.803, 5.10868, -5.47848, 3.32285, 16.2447, 7.10233, 79.1782, -9.04521, 79.2923, -10.1701, 4.0877, -9.57478, -30.191 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 5, 0 )
 scale = Vector2( 0.256, 0.274286 )
-frames = SubResource( 2 )
+frames = SubResource( 1 )
 animation = "Run"
 frame = 3

@@ -49,6 +49,7 @@ func change_bind(key,value):
 
 
 func Back():
+# warning-ignore:return_value_discarded
 	get_tree().change_scene("res://Scenes/Menu.tscn")
 	get_tree().paused = false
 

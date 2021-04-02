@@ -6,7 +6,7 @@ var configfile
 var keybinds = {}
 
 func _ready():
-	configfile =ConfigFile.new()
+	configfile = ConfigFile.new()
 	if configfile.load(filePath) == OK:
 		for key in configfile.get_section_keys("keybinds"):
 			var key_value = configfile.get_value("keybinds", key)
