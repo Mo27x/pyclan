@@ -3,6 +3,14 @@ class_name Player
 
 const Floor = Vector2(0, -1)
 
+var pos = [position.x, position.y]
+var death  = false
+var color = [255,255,255]
+var username = "username"
+var playerId
+var level
+var gameID
+
 var gravity_magnitude : int = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 export var speed :int = 300
@@ -10,6 +18,10 @@ export var jump_height : int = -1500
 
 onready var animazioni = $AnimatedSprite
 var velocity = Vector2()
+
+func _init(name, col):
+	username = name
+	color = col
 
 func get_input():
 	velocity = Vector2()
@@ -27,7 +39,9 @@ func get_input():
 	velocity.y +=  gravity_magnitude
 
 
-# warning-ignore:unused_argument
 func _physics_process(delta):
 	get_input()
 	velocity = move_and_slide(velocity,Floor)
+
+func GetPlayer():
+	return [pos, death, color, username, playerId, level, gameID]
