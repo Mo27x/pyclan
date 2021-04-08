@@ -43,7 +43,6 @@ func _process(delta: float) -> void:
 			available_object.global_position = _get_random_global_position(available_object)
 			available_object.start(g_object_velocity)
 			g_last_spawn_time_ms = OS.get_system_time_msecs()
-# warning-ignore:narrowing_conversion
 			g_rand_spawn_wait_ms = rand_range(g_min_spawn_wait_ms, g_max_spawn_wait_ms)
 		_add_to_available_objects()
 
@@ -111,5 +110,3 @@ func _list_files_in_directory(path: String) -> Array:
 	dir.list_dir_end()
 
 	return files
-
-

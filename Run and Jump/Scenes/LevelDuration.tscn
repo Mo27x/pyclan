@@ -14,8 +14,8 @@ __meta__ = {
 anchor_right = 0.512
 anchor_bottom = 0.027
 margin_bottom = -0.200001
-max_value = 5.0
-value = 5.0
+max_value = 10.0
+value = 10.0
 percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false

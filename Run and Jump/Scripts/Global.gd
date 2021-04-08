@@ -1,7 +1,6 @@
 extends Node
 
 onready var settingsmenu = load("res://Scenes/SettingsMenu.tscn")
-
 var filePath = "res://Keybinds.ini"
 var configfile
 var keybinds = {}

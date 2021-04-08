@@ -10,5 +10,5 @@ func _random_background():
 	backGround1.texture = load(random[0])
 	backGround2.texture = load(random[1])
 
-func _on_levelDuration_end_level():
-	_random_background()
+func _on_LevelTransport_body_entered(body):
+		_random_background()
