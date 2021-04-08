@@ -2,9 +2,6 @@ extends StaticBody2D
 
 var g_velocity: float = 0
 
-func _ready():
-	pass
-
 func _process(_delta: float) -> void:
 	position.x += g_velocity
 

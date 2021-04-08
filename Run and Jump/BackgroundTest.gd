@@ -1,8 +1,5 @@
 extends Node2D
 
-signal level1
-signal level2
-
 onready var backGround1 = $Sprite
 onready var backGround2 = $Sprite2
 
