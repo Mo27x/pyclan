@@ -13,7 +13,7 @@ func _ready():
 	labelName.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 	labelError.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 	
-	labelRequest.text = "Inserire un nome utente :"
+	labelRequest.text = "Insert an user-name :"
 	
 	hbox.add_child(labelRequest)
 	hbox.add_child(labelName)

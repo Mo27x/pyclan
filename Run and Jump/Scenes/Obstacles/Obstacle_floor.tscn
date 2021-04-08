@@ -3,7 +3,6 @@
 [ext_resource path="res://Scripts/Obstacles/Obstacle.gd" type="Script" id=1]
 [ext_resource path="res://Textures/ObstacleFloor1.png" type="Texture" id=2]
 
-
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 14, 19.6667 )
 
