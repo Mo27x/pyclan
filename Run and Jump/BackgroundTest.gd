@@ -1,8 +1,5 @@
 extends Node2D
 
-signal level1
-signal level2
-
 onready var backGround1 = $Sprite
 onready var backGround2 = $Sprite2
 
@@ -13,5 +10,5 @@ func _random_background():
 	backGround1.texture = load(random[0])
 	backGround2.texture = load(random[1])
 
-func _on_levelDuration_end_level():
-	_random_background()
+func _on_LevelTransport_body_entered(body):
+		_random_background()
