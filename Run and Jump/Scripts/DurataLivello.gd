@@ -7,6 +7,7 @@ onready var time = $ProgressBar/Timer
 
 var progress_value : int = 0
 
+# warning-ignore:unused_argument
 func _process(delta):
 	progress.value = progress_value
 	if progress.max_value == progress_value:

@@ -34,6 +34,7 @@ func _ready():
 
 	g_max_available_objects = paths.size() * g_copies_of_each
 
+# warning-ignore:unused_argument
 func _process(delta: float) -> void:
 	var time_diff = OS.get_system_time_msecs() - g_last_spawn_time_ms
 	if time_diff > g_rand_spawn_wait_ms:

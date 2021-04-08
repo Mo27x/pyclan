@@ -17,7 +17,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Obstacles",
 "language": "GDScript",
-"path": "res://Scripts/Obstacles.gd"
+"path": "res://Scripts/Obstacles/Obstacles.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "Player",

@@ -6,6 +6,7 @@ var texture_width: float = 0.0
 func _ready():
 	texture_width = texture.get_size().x * scale.x
 
+# warning-ignore:unused_argument
 func _process(delta: float) -> void:
 	position.x += velocity
 	_attempt_reposition()

@@ -19,5 +19,4 @@ func _on_Setting_pressed():
 #Customise the charachter
 func _on_Customise_pressed():
 # warning-ignore:return_value_discarded
-	get_tree().change_scene("res://Scenes/Customisable.tscn")
-	pass 
+	get_tree().change_scene("res://Scenes/Customisable/Customisable.tscn")

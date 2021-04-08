@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Scripts/Customisable.gd" type="Script" id=1]
-[ext_resource path="res://Scripts/CustomisableMenu.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Customisable/Customisable.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/Customisable/CustomisableMenu.gd" type="Script" id=2]
+[ext_resource path="res://Scenes/Customisable/CustomizableDummy.tscn" type="PackedScene" id=3]
 
 [node name="CustomisableMenu" type="CanvasLayer"]
 script = ExtResource( 2 )
@@ -31,20 +32,27 @@ margin_bottom = 576.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ColorPicker" type="ColorPicker" parent="Panel/MarginContainer/CustomisablePart/container"]
-margin_left = 686.0
-margin_right = 994.0
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/CustomisablePart/container"]
+margin_right = 495.0
 margin_bottom = 576.0
-size_flags_horizontal = 10
+size_flags_horizontal = 3
+
+[node name="CustomizableDummi" parent="Panel/MarginContainer/CustomisablePart/container/MarginContainer" instance=ExtResource( 3 )]
+position = Vector2( -1.68179, 1.68182 )
 
 [node name="tree" type="Tree" parent="Panel/MarginContainer/CustomisablePart/container"]
-margin_left = 998.0
-margin_right = 999.0
+margin_left = 499.0
+margin_right = 500.0
 margin_bottom = 576.0
-size_flags_horizontal = 8
-size_flags_vertical = 3
+size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.0
 columns = 3
+
+[node name="ColorPicker" type="ColorPicker" parent="Panel/MarginContainer/CustomisablePart/container"]
+margin_left = 691.0
+margin_right = 999.0
+margin_bottom = 576.0
+size_flags_horizontal = 10
 
 [node name="Buttons" type="HBoxContainer" parent="Panel/MarginContainer/CustomisablePart"]
 margin_top = 580.0
@@ -73,5 +81,6 @@ g_path_hair = "res://Textures/Accessories/Hair/"
 g_path_hat = "res://Textures/Accessories/Hat/"
 g_path_head = "res://Textures/Accessories/Head/"
 g_path_beard = "res://Textures/Accessories/beard/"
+[connection signal="color_changed" from="Panel/MarginContainer/CustomisablePart/container/ColorPicker" to="Panel/MarginContainer/CustomisablePart/container/MarginContainer/CustomizableDummi" method="_on_ColorPicker_color_changed"]
 [connection signal="pressed" from="Panel/MarginContainer/CustomisablePart/Buttons/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/CustomisablePart/Buttons/Exit" to="." method="_on_Exit_pressed"]
