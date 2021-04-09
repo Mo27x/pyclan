@@ -1,4 +1,3 @@
-from chat import Chat
 
 class User:
     def __init__(self, username, password):
@@ -6,6 +5,7 @@ class User:
         self.password = password
         self.nChats = 0
         self.chats = {}
+        self.id = 0
     
     def createChat(self):
         self.nChats += 1
