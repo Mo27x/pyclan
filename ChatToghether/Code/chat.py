@@ -8,15 +8,15 @@ class Chat:
         self.users = {}
         self.name = name
 
-    def addMessage(self, message, sender):
+    def addMessage(self, message, user):#add a new message
         data = open("chat" + str(self.id) + ".txt", "a")
-        sdata = data.write(str(sender.username) + ": " + str(message) + "\n")
+        sdata = data.write(str(user.username) + ": " + str(message) + "\n")
         data.close()
 
-    def getChat(self):
+    def getChat(self):#create a new file storing the chat messages
         data = open("chat" + str(self.id) + ".txt", "r")
         sdata = data.read()
         data.close()
         return sdata
-    def addUser(self, user, id):
+    def addUser(self, user, id):#add a new use to chat
         self.users[self.id] = user

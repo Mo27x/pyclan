@@ -16,7 +16,6 @@ except socket.error as e:
 s.listen()
 print("Waiting for a connection, Server Started")
 
-connected = set()
 chats = {}
 nChats = 0
 idCount = 0
@@ -28,7 +27,7 @@ def threaded_client(conn, i):
     reply = ""
     while True:
         try:
-            data = pickle.loads(conn.recv(4096))
+            data = pickle.loads(conn.recv(4096))#de-code
             chatId = data[0]
 
             if chatId in chats:
@@ -37,17 +36,17 @@ def threaded_client(conn, i):
                     break
                 else:
                     if data[1] == "get":
-                        reply = chat.getChat()
+                        reply = chat.getChat()#get messages from file
                     elif data[1] == "add":
-                        chat.addMessage(data[2], data[3])
+                        chat.addMessage(data[2], data[3])#add the message
                     elif data[1] == "join":
-                        chat.addUser(data[2], data[3])
+                        chat.addUser(data[2], data[3])#add user to chat
                     
-                    reply = chat.getChat()
-                    conn.send(pickle.dumps(reply))
+                    reply = chat.getChat()#update the chat
+                    conn.send(pickle.dumps(reply))#en-code the chat and send it
             elif data[1] == "create":
-                chats[nChats] = Chat(nChats)
-                conn.send(chats[nChats])
+                chats[nChats] = Chat(nChats)#create a new chat
+                conn.send(pickle.dumps(chats[nChats].getChat()))
             else:
                 break
         except:
@@ -57,7 +56,7 @@ def threaded_client(conn, i):
     conn.close()
 
 while True:
-    conn, addr = s.accept()
+    conn, addr = s.accept()#tries to accept connection and adress for chat
     print("Connected to: ", addr)
     idCount += 1
 
