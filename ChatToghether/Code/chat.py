@@ -18,5 +18,5 @@ class Chat:
         sdata = data.read()
         data.close()
         return sdata
-    def addUser(self, user, id):#add a new use to chat
+    def addUser(self, user, id):#add a new user to chat
         self.users[self.id] = user

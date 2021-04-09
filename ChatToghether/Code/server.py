@@ -46,7 +46,7 @@ def threaded_client(conn, i):
                     conn.send(pickle.dumps(reply))#en-code the chat and send it
             elif data[1] == "create":
                 chats[nChats] = Chat(nChats)#create a new chat
-                conn.send(pickle.dumps(chats[nChats].getChat()))
+                conn.send(pickle.dumps(chats[nChats].getChat()))#en-code the new chat and update it
             else:
                 break
         except:

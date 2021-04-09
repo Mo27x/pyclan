@@ -1,13 +1,13 @@
 
 class User:
-    def __init__(self, username, password):
+    def __init__(self, username, password):#Constructor
         self.username = username
         self.password = password
         self.nChats = 0
         self.chats = {}
         self.id = 0
     
-    def createChat(self):
+    def createChat(self):#
         self.nChats += 1
     
     def joinChat(self, id):
