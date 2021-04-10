@@ -1,7 +1,9 @@
 from tkinter import *
 
 root = Tk()
-root.title("Test for images")
-root.iconbitmap('./images/favicon.ico')
+root.title("ChatTogether")
+root.iconbitmap('./Images/ChatTogether.ico')
+
+
 
 root.mainloop()

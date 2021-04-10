@@ -1,22 +1,54 @@
 from network import Network
 from user import User
+import os
+import time
 
-def sendMessage(userx, n):#send the messages to the chat
-    message = input("Insert message(premere invio per aggiornare la chat): ")
-    if message != "":
-        chat = n.send([1,"add",message, userx])
+def sendMessage(user):
+    message = ""
+    while message == "":
+        message = input("Insert your username: ")
+    chatId = ""
+    verify = False
+    while not verify:
+        try:
+            verify = True
+            chatId = int(input("Insert the id of the chat: ")) # for the tests put 1
+        except:
+            verify = False
+    user.sendMessage(chatId, message)
+def joinChat(user):
+    chatName = ""
+    chatId = ""
+    while chatName != "" and chatCode != "":
+        chatName = input("Insert the chat's name: ")
+        chatCode = input("Insert the chat's code: ")
+    user.joinChat(chatId, chatName)
 
-def main():#User data
-    network = Network()#connect User
-    user = User(input("Insert your username: "), input("Insert your password: "))#Data from user
-    user.id = int(network.getP())#get ID user
+def createChat(user):
+    chatName = ""
+    chatCode = ""
+    while chatName == "":
+        chatName = input("Insert the name of the chat you want to create: ")
+    while chatCode == "":
+        chatCode = input("Insert the code of the chat you want to create: ")
+    user.createChat(chatName, chatCode)    
+
+# Client's main
+def main():
+    username = ""
+    password = ""
+    while username == "":
+        username = input("Insert your username: ")
+    while password == ""
+        password = input("Insert your password: ")
+    # create a user
+    user = User(username, password)
     print("You are user: ", user.id)
-
+    createChat(user)
     while True:
-        chat = network.send([1, "get"])#get specific chat (1 is for template) the fisrt argument incates the chat ID
-        oldChat = ""
-        if oldChat != chat:
-            print(chat)
-        oldChat = chat
-        sendMessage(user, network)
+        chatData = user.getChat(1)
+        user.addChat(chatData[1], chatData[2])
+        print(chatData[0])
+        time.sleep(1)
+        os.system('cls')
 main()
