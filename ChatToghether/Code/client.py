@@ -39,7 +39,7 @@ def main():
     password = ""
     while username == "":
         username = input("Insert your username: ")
-    while password == ""
+    while password == "":
         password = input("Insert your password: ")
     # create a user
     user = User(username, password)
