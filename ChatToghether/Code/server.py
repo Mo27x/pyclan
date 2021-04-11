@@ -3,7 +3,6 @@ from _thread import *
 import pickle
 import json
 from chat import Chat
-from user import User
 
 server = "192.168.1.27"
 port = 5555
@@ -34,6 +33,8 @@ def threaded_client(conn, i):
             data = pickle.loads(conn.recv(4096))#de-code
             if data == None:
                 break
+            if data[0] in users:
+                idCount -= 1
             chatId = int(data[1])
 
             if chatId in chats:

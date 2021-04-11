@@ -33,10 +33,11 @@ def createChat(user):
         chatCode = input("Insert the code of the chat you want to create: ")
     return user.createChat(chatName, chatCode)
 def getChat(user):
-    chatId = ""
-    while chatId == "":
+    chatId = None
+    while chatId == None:
         chatId = int(input("Insert the chat's ID: "))
-    user.getChat(chatId)
+    print(chatId)
+    return user.getChat(chatId)
 
 # Client's main
 def main():
@@ -50,14 +51,14 @@ def main():
     user = User(username, password)
     print("You are user: ", user.id)
     while True:
-        function = int(input("What you want to do: "))
+        function = input("What you want to do: ")
         chatData = []
-        if function == 1:
+        if function == "1":
             chatData = createChat(user)
             print("The ID of the chat you created is: ", chatData[1])
-        elif function == 2:
+        elif function == "2":
             chatData = joinChat(user)
-        elif function == 3:
+        elif function == "3":
             chatData = sendMessage(user)
         else:
             chatData = getChat(user)

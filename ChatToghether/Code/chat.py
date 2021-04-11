@@ -23,6 +23,6 @@ class Chat:
             return [ret, self.id, self.name]
 
     def addUser(self, userId, username, code, id): # add a new user to chat
-        if self.code == code and self.id == id:
+        if self.code == code and self.id == id and userId not in self.users:
             self.users[userId] = username
             return self.getChat(userId)
