@@ -1,13 +1,14 @@
 import json
+
 class Chat:
-    def __init__(self, id, name,username, userId, code):
+    def __init__(self, id, name, username, userId, code):
         self.id = id
         self.chatFile = open("chat" + str(self.id) + ".txt", "w+")
         self.chatFile.close()
         self.users = {}
         self.name = name
         self.code = code
-        self.addUser(userId,username, self.code, self.id)
+        self.addUser(userId, username, self.id, self.code)
 
     def addMessage(self, username, message, userId):#add a new message
         if userId in self.users:
@@ -22,7 +23,7 @@ class Chat:
             self.chatFile.close()
             return [ret, self.id, self.name]
 
-    def addUser(self, userId, username, code, id): # add a new user to chat
-        if self.code == code and self.id == id and userId not in self.users:
+    def addUser(self, userId, username, id, code): # add a new user to chat
+        if self.code == code and self.id == id and not userId in self.users:
             self.users[userId] = username
             return self.getChat(userId)
