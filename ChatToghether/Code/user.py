@@ -10,12 +10,12 @@ class User:
         self.id = int(self.network.getP())
     
     def joinChat(self, chatId, code):
-        return self.network.send([self.id, -1, "join", self.username, code, chatId])
+        return self.network.send([self.id, chatId, "join", self.username, code])
 
     def getChat(self, chatId):
         return self.network.send([self.id, chatId, "get", self.username])
 
-    def sendMessage(self, chatId, message):
+    def sendMessage(self, message, chatId):
         if message != None:
             return self.network.send([self.id, chatId,"add", self.username, message])
     

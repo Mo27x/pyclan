@@ -1,12 +1,11 @@
 from network import Network
 from user import User
 import os
-import time
 
 def sendMessage(user):
     message = ""
     while message == "":
-        message = input("Insert your username: ")
+        message = input("Insert the message you want to send: ")
     chatId = ""
     verify = False
     while not verify:
@@ -15,14 +14,15 @@ def sendMessage(user):
             chatId = int(input("Insert the id of the chat: ")) # for the tests put 1
         except:
             verify = False
-    user.sendMessage(chatId, message)
+    return user.sendMessage(message, chatId)
 def joinChat(user):
-    chatName = ""
     chatId = ""
-    while chatName != "" and chatCode != "":
-        chatName = input("Insert the chat's name: ")
+    chatCode = ""
+    while chatId == "":
+        chatId = input("Insert the chat's ID: ")
+    while chatCode == "":
         chatCode = input("Insert the chat's code: ")
-    user.joinChat(chatId, chatName)
+    return user.joinChat(chatId, chatCode)
 
 def createChat(user):
     chatName = ""
@@ -31,7 +31,7 @@ def createChat(user):
         chatName = input("Insert the name of the chat you want to create: ")
     while chatCode == "":
         chatCode = input("Insert the code of the chat you want to create: ")
-    user.createChat(chatName, chatCode)    
+    return user.createChat(chatName, chatCode)    
 
 # Client's main
 def main():
@@ -44,18 +44,19 @@ def main():
     # create a user
     user = User(username, password)
     print("You are user: ", user.id)
-    createChat(user)
     while True:
-        function = input("What you want to do: ")
+        function = int(input("What you want to do: "))
+        chatData = []
         if function == 1:
-            createChat(user)
+            chatData = createChat(user)
+            print("The ID of the chat you created is: ", chatData[1])
         elif function == 2:
-            joinChat(user)
+            chatData = joinChat(user)
         elif function == 3:
-            sendMessage(user)
-        chatData = user.getChat(1)
-        user.addChat(chatData[1], chatData[2])
+            chatData = sendMessage(user)
+        else:
+            chatData = user.getChat()
+        # chatData = user.getChat(1)
         print(chatData[0])
-        time.sleep(1)
-        os.system('cls')
+        user.addChat(chatData[1], chatData[2])
 main()

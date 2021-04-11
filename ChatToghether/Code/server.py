@@ -35,8 +35,7 @@ def threaded_client(conn, i):
             print(data)
             if data == None:
                 break
-            chatId = data[1]
-            idCount += 1
+            chatId = int(data[1])
 
             if chatId in chats:
                 chat = chats[chatId]
@@ -44,6 +43,9 @@ def threaded_client(conn, i):
                     reply = chat.getChat(data[0])#get messages from file
                 elif data[2] == "add":
                     chat.addMessage(data[3], data[4], data[0])#add the message
+                elif data[2] == "join":
+                    chat.addUser(data[0], data[3], data[4], chatId)#add user to chat
+                print([data[0], data[3], data[4], chatId])
                 
                 reply = chat.getChat(data[0])#update the chat
                 print(chats)
@@ -55,10 +57,8 @@ def threaded_client(conn, i):
                 if data[2] == "create":
                     nChats += 1
                     chats[nChats] = Chat(nChats, data[4], data[3], data[0], data[5]) # create a new chat
+                    print(chats[nChats].users)
                     reply = chats[nChats].getChat(nChats)
-
-                elif data[2] == "join":
-                    reply = chat.addUser(data[0], data[3], data[4], data[5])#add user to chat
 
                 print(chats)
                 conn.send(pickle.dumps(reply))
@@ -73,5 +73,6 @@ def threaded_client(conn, i):
 while True:
     conn, addr = s.accept()#tries to accept connection and adress for chat
     print("Connected to: ", addr)
+    idCount += 1
 
     start_new_thread(threaded_client, (conn,1))

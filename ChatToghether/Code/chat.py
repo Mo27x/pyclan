@@ -7,7 +7,7 @@ class Chat:
         self.users = {}
         self.name = name
         self.code = code
-        self.addUser(username, userId, self.code, self.id)
+        self.addUser(userId,username, self.code, self.id)
 
     def addMessage(self, username, message, userId):#add a new message
         if self.isUser(userId):
@@ -24,8 +24,8 @@ class Chat:
 
     def addUser(self, userId, username, code, id): # add a new user to chat
         if self.code == code and self.id == id:
-            self.users[username] = userId
-            return self.getChat(userId)
+            self.users[userId] = username
+
     def isUser(self, userId):
         if userId in self.users:
             return True
