@@ -46,6 +46,13 @@ def main():
     print("You are user: ", user.id)
     createChat(user)
     while True:
+        function = input("What you want to do: ")
+        if function == 1:
+            createChat(user)
+        elif function == 2:
+            joinChat(user)
+        elif function == 3:
+            sendMessage(user)
         chatData = user.getChat(1)
         user.addChat(chatData[1], chatData[2])
         print(chatData[0])
