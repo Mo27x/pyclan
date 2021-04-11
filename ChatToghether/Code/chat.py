@@ -10,13 +10,13 @@ class Chat:
         self.addUser(userId,username, self.code, self.id)
 
     def addMessage(self, username, message, userId):#add a new message
-        if self.isUser(userId):
+        if userId in self.users:
             self.chatFile = open("chat" + str(self.id) + ".txt", "a")
             self.chatFile.write(str(username) + ": " + str(message) + "\n")
             self.chatFile.close()
 
     def getChat(self, userId):#create a new file storing the chat messages
-        if self.isUser(userId):
+        if userId in self.users:
             self.chatFile = open("chat" + str(self.id) + ".txt", "r")
             ret = self.chatFile.read()
             self.chatFile.close()
@@ -26,8 +26,3 @@ class Chat:
         if self.code == code and self.id == id:
             self.users[userId] = username
             return self.getChat(userId)
-    def isUser(self, userId):
-        if userId in self.users:
-            return True
-        else:
-            return False
