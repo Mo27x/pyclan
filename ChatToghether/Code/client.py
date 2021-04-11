@@ -31,7 +31,12 @@ def createChat(user):
         chatName = input("Insert the name of the chat you want to create: ")
     while chatCode == "":
         chatCode = input("Insert the code of the chat you want to create: ")
-    return user.createChat(chatName, chatCode)    
+    return user.createChat(chatName, chatCode)
+def getChat(user):
+    chatId = ""
+    while chatId == "":
+        chatId = input("Insert the chat's ID: ")
+    user.getChat(chatId)
 
 # Client's main
 def main():
@@ -55,8 +60,7 @@ def main():
         elif function == 3:
             chatData = sendMessage(user)
         else:
-            chatData = user.getChat()
-        # chatData = user.getChat(1)
+            chatData = user.getChat(1)
         print(chatData[0])
         user.addChat(chatData[1], chatData[2])
 main()
