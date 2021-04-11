@@ -30,9 +30,8 @@ def threaded_client(conn, i):
     conn.send(str.encode(str(idCount)))
     reply = ""
     while True:
-        # try:
+        try:
             data = pickle.loads(conn.recv(4096))#de-code
-            print(data)
             if data == None:
                 break
             chatId = int(data[1])
@@ -45,28 +44,21 @@ def threaded_client(conn, i):
                     chat.addMessage(data[3], data[4], data[0])#add the message
                 elif data[2] == "join":
                     chat.addUser(data[0], data[3], data[4], chatId)#add user to chat
-                print([data[0], data[3], data[4], chatId])
                 
                 reply = chat.getChat(data[0])#update the chat
-                print(chats)
-                print(chat.users)
                 conn.send(pickle.dumps(reply))#en-code the chat and send it
             
             elif chatId == -1:
-                print(chats)
                 if data[2] == "create":
                     nChats += 1
                     chats[nChats] = Chat(nChats, data[4], data[3], data[0], data[5]) # create a new chat
-                    print(chats[nChats].users)
                     reply = chats[nChats].getChat(nChats)
 
-                print(chats)
                 conn.send(pickle.dumps(reply))
             else:
                 break
-        # except:
-        #     break
-    print(chats)
+        except:
+            break
     print("Lost Connection")
     conn.close()
 
