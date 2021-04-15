@@ -4,8 +4,14 @@ root=Tk()
 root.title("Chat Together")
 root.geometry("700x500")
 
-Label1=Label(root,text="Inserisci l'username")
-Label2=Label(root,text="Inserisci la password")
+app_width=1000
+app_height=500
+
+screen_width=root.winfo_screenwidth()
+screen_height=root.winfo_screenheight()
+
+Label1=Label(root,text="Insert your username")
+Label2=Label(root,text="Insert your ID")
 Label1.grid(row=0,column=0,pady=20,padx=20)
 Label2.grid(row=0,column=1,pady=20,padx=20)
 
