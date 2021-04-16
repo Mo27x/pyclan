@@ -8,10 +8,10 @@ class Network:
         self.server = "192.168.1.27"
         self.port = 5555
         self.addr = (self.server, self.port)
-        self.p =  self.connect()
+        self.id =  self.connect()
 
     def getId(self):#returns the user ID
-        return self.p
+        return self.id
 
     def connect(self):#connect user to server
         try:

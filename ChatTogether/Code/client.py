@@ -1,3 +1,4 @@
+from tkinter import *
 from network import Network
 from user import User
 import time
