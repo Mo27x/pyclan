@@ -1,9 +1,11 @@
 class User:
     def __init__(self, username, password, chats: dict):
-        self.username = username
-        self.password = password
-        self.chats = chats
-        self.id = ""
+        if username != "" and len(password) >= 8:
+            self.username = username
+            self.password = password
+            self.chats = chats
+        else:
+            return None
 
     def addChat(self, chatId, chatName):
         if not chatId in self.chats:

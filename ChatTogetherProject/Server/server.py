@@ -11,10 +11,12 @@ server = "192.168.1.27"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-IdsFile = open("Ids.txt", "r")
-chatsId = IdsFile.readlines()
-IdsFile.close()
-Ids = []
+usernameFile = open("usernames.txt", "r")
+usernames = usernameFile.readlines()
+usernameFile.close()
+chatsIdFile = open("chatsId.txt", "r")
+chatsId = chatsIdFile.readlines()
+chatsIdFile.close()
 chats = {}
 with open("chats.json", "r") as chatsFile:
     chats = json.load(chatsFile)
@@ -39,13 +41,13 @@ def assembleClass(dictClass: dict):
     return Chat(dictClass["id"],dictClass["name"],dictClass["code"],dictClass["users"], dictClass["messages"])
 
 def assembleUserClass(dictClass: dict):
-    return User(dictClass["username"], dictClass["id"], dictClass["chats"])
+    return User(dictClass["username"], dictClass["password"], dictClass["chats"])
 
 def updateUsers(user: User):
     global users
     with open("users.json", "r") as usersFile:
         users = json.load(usersFile)
-    users[user.id] = user.__dict__
+    users[user.username] = user.__dict__
     with open("users.json", "w") as usersFile:
         json.dump(users, usersFile)
 def updateChats(chat: Chat):
@@ -55,24 +57,31 @@ def updateChats(chat: Chat):
     chats[chat.id] = chat.__dict__
     with open("chats.json", "w") as chatsFile:
         json.dump(chats, chatsFile)
-def updateIds(id):
-    if id not in Ids:
-        with open("Ids.txt", "a") as IdsFile:
-            IdsFile.write(id + "\n")
+def updateUsernames(username):
+    if username not in usernames:
+        with open("usernames.txt", "a") as usernameFile:
+            usernameFile.write(username + "\n")
+        return True
+    else:
+        return False
+def updateChatsId(chatId):
+    if chatId not in chatsId:
+        with open("chatsId.txt", "a") as chatsIdFile:
+            chatsIdFile.write(chatId + "\n")
         return True
     else:
         return False
 
 def getChatUsers(chat: Chat):
     chatUsers = []
-    for userId in chat.users:
-        chatUsers.append(users[userId]["username"])
+    for username in chat.users:
+        chatUsers.append(users[username]["username"])
     return chatUsers
 
 def threaded_client(conn):
     global users
     global chats
-    global Ids
+    global usernames
     reply = []
     user = None
     logged = False
@@ -96,16 +105,17 @@ def threaded_client(conn):
                 with open("chats.json", "r") as chatsFile:
                     chats = json.load(chatsFile)
                 if data[1] == "get":
-                    reply = chat.getChat(user.id)
+                    reply = chat.getChat(user.username)
                 elif data[1] == "add":
-                    chat.addMessage(user.id, user.username, data[3])
-                    reply = chat.getChat(user.id)   
+                    chat.addMessage(user.username, user.username, data[3])
+                    reply = chat.getChat(user.username)   
                 elif data[1] == "join":
-                    chat.addUser(user.id, data[2], data[3])
-                    reply = chat.getChat(user.id)
+                    chat.addUser(user.username, data[2], data[3])
+                    user.addChat(chat.id, chat.name)
+                    reply = chat.getChat(user.username)
                 elif data[1] == "quit":
                     user.removeChat(chat.id)
-                    chat.removeUser(user.id)
+                    chat.removeUser(user.username)
                     reply.append("You have been remove correctly")
                 chats[chatId] = chat.__dict__
                 with open("chats.json", "w") as chatsFile:
@@ -117,35 +127,34 @@ def threaded_client(conn):
             elif chatId == -1:
                 if data[1] == "create":
                     chatId = get_random_id()
-                    while chatId in Ids:
+                    while chatId in usernames:
                         chatId = get_random_id()
-                    if updateIds(chatId):
-                        Ids.append(chatId)
-                    chat = Chat(chatId, data[3], data[4], [user.id], "Let's groove chatting on chatTogether")
+                    if updateChatsId(chatId):
+                        usernames.append(chatId)
+                    chat = Chat(chatId, data[3], data[4], [user.username], "Let's groove chatting on chatTogether")
                     updateChats(chat)
                     user.addChat(chat.id, chat.name)
                     updateUsers(user)
                     chatUsers = []
                     for userId in chat.users:
                         chatUsers.append(users[userId]["username"])
-                    reply = chat.getChat(user.id)
+                    reply = chat.getChat(user.username)
                     reply2 = [user, getChatUsers(chat), chat.id]
                     reply.extend(reply2)
                 elif data[1] == "login":
-                    if user.username == users[user.id]["username"] and user.password == users[user.id]["password"]:
-                        user = assembleUserClass(users[user.id])
+                    if user.username == users[user.username]["username"] and user.password == users[user.username]["password"]:
+                        user = assembleUserClass(users[user.username])
                         logged = True
                     else:
-                        reply = ["You typed wrong data", user, logged]
+                        reply = ["Username or password is wrong", user, logged]
                 elif data[1] == "signin":
-                    userId = get_random_id()
-                    while userId in Ids:
-                        userId = get_random_id()
-                    user.id = userId
-                    updateIds(userId)
-                    updateUsers(user)
-                    logged = True
-                    reply = ["Welcome to chat together", user, logged]
+                    if updateUsernames(user.username) == False:
+                        reply = ["The username you entered still exists", user, logged]
+                    else:
+                        usernames.append(user.username)
+                        updateUsers(user)
+                        logged = True
+                        reply = ["Welcome to chat together", user, logged]
                 conn.send(pickle.dumps(reply))
             else:
                 conn.send(pickle.dumps(["You typed wrong data", user]))
