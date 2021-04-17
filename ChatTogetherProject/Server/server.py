@@ -33,7 +33,7 @@ print("Waiting for a connection, Server Started")
 
 def get_random_id():
     letters = string.ascii_lowercase
-    userId = ''.join(random.choice(letters) for i in range(6))
+    userId = ''.join(random.choice(letters) for i in range(11))
     return userId
 def assembleClass(dictClass: dict):
     return Chat(dictClass["id"],dictClass["name"],dictClass["code"],dictClass["users"], dictClass["messages"])
@@ -69,33 +69,23 @@ def getChatUsers(chat: Chat):
         chatUsers.append(users[userId]["username"])
     return chatUsers
 
-
 def threaded_client(conn):
     global users
     global chats
     global Ids
-    userId = get_random_id()
-    while userId in Ids:
-        userId = get_random_id()
-    conn.send(userId.encode())
     reply = []
-    reply: list
+    user = None
+    logged = False
     while True:
-        # try:
+        try:
             reply = []
             data = pickle.loads(conn.recv(4096))
             if data == None:
                 break
-            user = data[0]
-            user : User
+            if not logged:
+                user = data[0]
             chatId = data[2]
             isChat = False
-            if user.id != userId and user.id in users and user.username == users[user.id]["username"]:
-                user = assembleUserClass(users[user.id])
-            else:
-                if updateIds(userId):
-                    Ids.append(userId)
-                updateUsers(user)
             for idChat in chats:
                 if idChat == chatId:
                     isChat = True
@@ -141,11 +131,26 @@ def threaded_client(conn):
                     reply = chat.getChat(user.id)
                     reply2 = [user, getChatUsers(chat), chat.id]
                     reply.extend(reply2)
+                elif data[1] == "login":
+                    if user.username == users[user.id]["username"] and user.password == users[user.id]["password"]:
+                        user = assembleUserClass(users[user.id])
+                        logged = True
+                    else:
+                        reply = ["You typed wrong data", user, logged]
+                elif data[1] == "signin":
+                    userId = get_random_id()
+                    while userId in Ids:
+                        userId = get_random_id()
+                    user.id = userId
+                    updateIds(userId)
+                    updateUsers(user)
+                    logged = True
+                    reply = ["Welcome to chat together", user, logged]
                 conn.send(pickle.dumps(reply))
             else:
-                conn.send(pickle.dumps(["The typed wrong data", user]))
-        # except:
-        #     break
+                conn.send(pickle.dumps(["You typed wrong data", user]))
+        except:
+            break
     print("Lost Connection")
     conn.close()
 

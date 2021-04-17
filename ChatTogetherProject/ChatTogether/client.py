@@ -8,7 +8,7 @@ def sendMessage(user, network):
     while message == "":
         message = input("Insert the message you want to send: ")
     chatId = ""
-    while chatId == "" or len(chatId) != 6:
+    while chatId == "" or len(chatId) != 11:
         chatId = input("Insert the id of the chat: ")
     return network.send([user, "add", chatId, message])
 def joinChat(user, network):
@@ -16,7 +16,7 @@ def joinChat(user, network):
     while chatCode == "":
         chatCode = input("Insert the chat's code: ")
     chatId = ""
-    while chatId == "" or len(chatId) != 6:
+    while chatId == "" or len(chatId) != 11:
         chatId = input("Insert the chat's ID: ")
     return network.send([user, "join", chatId, chatCode])
 
@@ -31,28 +31,27 @@ def createChat(user, network):
 
 def getChat(user, network):
     chatId = ""
-    while chatId == "" or len(chatId) != 6:
+    while chatId == "" or len(chatId) != 11:
         chatId = input("Insert the chat's ID: ")
     return network.send([user, "get", chatId])
 
 def quitChat(user, network):
     chatId = ""
-    while chatId == "" or len(chatId) != 6:
+    while chatId == "" or len(chatId) != 11:
         chatId = input("Insert the id of the chat you want to delete: ")
     return network.send([user, "quit", chatId])
+def login(user, network):
+    return network.send([user,"signin", -1])
 
 # Client's main
 def main():
     username = ""
     while username == "":
         username = input("Insert your username: ")
-    userId = input("Insert your id if you have one, else press enter: ")
+    password = input("Insert your password: ")
 
-    user = User(username, userId, {})
+    user = User(username, password, {})
     network = Network()
-    if userId == "":
-        user.id = network.getId()
-        print("You are user: ", user.id)
     while True:
         function = input("What do you want to do(1: create a chat, 2: join a chat, 3: send a message, 4: quit a chat, other: view messages): ")
         chatData = []
@@ -65,9 +64,12 @@ def main():
             chatData = sendMessage(user, network)
         elif function == "4":
             chatData = quitChat(user, network)
-        else:
+        elif function == "5":
             chatData = getChat(user, network)
+        else:
+            chatData = login(user, network)
         user = chatData[1]
         print(chatData[0])
-        print(chatData[2])
+        if function == "3":
+            print(chatData[2])
 main()
