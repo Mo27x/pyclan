@@ -35,8 +35,8 @@ print("Waiting for a connection, Server Started")
 
 def get_random_id():
     letters = string.ascii_lowercase
-    userId = ''.join(random.choice(letters) for i in range(11))
-    return userId
+    Id = ''.join(random.choice(letters) for i in range(6))
+    return Id
 def assembleClass(dictClass: dict):
     return Chat(dictClass["id"],dictClass["name"],dictClass["code"],dictClass["users"], dictClass["messages"])
 
@@ -105,14 +105,16 @@ def threaded_client(conn):
                 with open("chats.json", "r") as chatsFile:
                     chats = json.load(chatsFile)
                 if data[1] == "get":
-                    reply = chat.getChat(user.username)
+                    reply.append(chat.getChat(user.username))
                 elif data[1] == "add":
                     chat.addMessage(user.username, user.username, data[3])
-                    reply = chat.getChat(user.username)   
+                    reply.append(chat.getChat(user.username))
                 elif data[1] == "join":
-                    chat.addUser(user.username, data[2], data[3])
-                    user.addChat(chat.id, chat.name)
-                    reply = chat.getChat(user.username)
+                    if chat.addUser(user.username, data[2], data[3]):
+                        user.addChat(chat.id, chat.name)
+                        reply = chat.getChat(user.username)
+                    else:
+                        reply = ["Id or code is wrong"]
                 elif data[1] == "quit":
                     user.removeChat(chat.id)
                     chat.removeUser(user.username)
@@ -122,7 +124,10 @@ def threaded_client(conn):
                     json.dump(chats, chatsFile)
                 reply.append(user)
                 if data[1] == "get" or data[1] == "add" or data[1] == "join":
-                    reply.append(getChatUsers(chat))
+                    if chat.getUsers(user.username) != None:
+                        reply.append(chat.getUsers(user.username))
+                    else:
+                        reply.append(False)
                 conn.send(pickle.dumps(reply))
             elif chatId == -1:
                 if data[1] == "create":
@@ -131,20 +136,19 @@ def threaded_client(conn):
                         chatId = get_random_id()
                     if updateChatsId(chatId):
                         usernames.append(chatId)
-                    chat = Chat(chatId, data[3], data[4], [user.username], "Let's groove chatting on chatTogether")
+                    chat = Chat(chatId, data[3], data[4], [user.username], ["Let's groove chatting on chatTogether"])
                     updateChats(chat)
                     user.addChat(chat.id, chat.name)
                     updateUsers(user)
-                    chatUsers = []
-                    for userId in chat.users:
-                        chatUsers.append(users[userId]["username"])
-                    reply = chat.getChat(user.username)
+                    reply.append(chat.getChat(user.username))
                     reply2 = [user, getChatUsers(chat), chat.id]
                     reply.extend(reply2)
                 elif data[1] == "login":
-                    if user.username == users[user.username]["username"] and user.password == users[user.username]["password"]:
-                        user = assembleUserClass(users[user.username])
-                        logged = True
+                    if user.username in users:
+                        if user.username == users[user.username]["username"] and user.password == users[user.username]["password"]:
+                            user = assembleUserClass(users[user.username])
+                            logged = True
+                            reply = ["Welcome back to chat together", user, logged]
                     else:
                         reply = ["Username or password is wrong", user, logged]
                 elif data[1] == "signin":

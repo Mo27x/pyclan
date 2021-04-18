@@ -1,5 +1,5 @@
 class Chat:
-    def __init__(self, id, name, code, users: list, messages):
+    def __init__(self, id, name, code, users, messages: list):
         if id != "" and name != "" and code != "":
             self.id = id
             self.users = users
@@ -11,18 +11,22 @@ class Chat:
 
     def addMessage(self, userId, username, message):
         if userId in self.users:
-            self.messages = self.messages + ("\n" + str(username) + ": " + str(message))
+            self.messages.append((str(username) + ": " + str(message)))
+            return True
 
     def getChat(self, username):
         if username in self.users:
-            return [self.messages]
-        else:
-            return ["You did not joined this chat"]
+            return self.messages
 
     def addUser(self, username, id, code):
         if self.code == code and self.id == id and username not in self.users:
             self.users.append(username)
+            return True
     
     def removeUser(self, username):
         if username in self.users:
             self.users.remove(username)
+    
+    def getUsers(self, username):
+        if username in self.users:
+            return self.users

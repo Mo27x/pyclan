@@ -4,11 +4,11 @@ import pickle
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.server = "176.206.56.226"
-        self.server = "192.168.1.27"
+        self.server = "176.206.8.108"
+        # self.server = "192.168.1.27"
         self.port = 5555
         self.addr = (self.server, self.port)
-        self.id =  self.connect()
+        self.connect()
 
     def getId(self):#returns the user ID
         return self.id
@@ -16,6 +16,12 @@ class Network:
     def connect(self):#connect user to server
         try:
             self.client.connect(self.addr)
+        except:
+            pass
+
+    def disconnect(self):
+        try:
+            self.client.close()
         except:
             pass
 
