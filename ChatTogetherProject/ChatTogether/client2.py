@@ -19,6 +19,7 @@ def updateChat(value):
         if user.chats[chatId] == chat:
             ChatsId = chatId
     getChat()
+    printUsers()
     ChatNameLabel.destroy()
     ChatNameLabel = Label(ChatNameFrame,text=("Chat Name: " + chat + " Chat Id: " + ChatsId),bg="light blue",fg="white",relief=FLAT)
     ChatNameLabel.pack()
@@ -40,6 +41,7 @@ def updateChats():
     for chat in chats:
         chatCreated = Radiobutton(listboxChats,relief=FLAT,bg="light blue",text = chat,variable=r, value=chat, command=lambda: updateChat(r.get()))
         listboxChats.insert(END,chatCreated.pack())
+    printUsers()
 
 def sendMessage():
     global messageEntered
@@ -47,7 +49,6 @@ def sendMessage():
     global user
     global users
     global chat
-    MessageSender.pack_forget()
     message = messageEntered.get()
     for chatId in user.chats:
         if user.chats[chatId] == chat:
@@ -290,7 +291,7 @@ def main():
     JoinChatButton.pack(fill = X, side=LEFT)
     SendButton.pack_forget()
 
-    messageEntered.pack(fill = X,side=LEFT,expand=True)
+    messageEntered.pack(fill = X,side=LEFT)
     codeEntered.pack_forget()
     IdNameEnter.pack_forget()
 

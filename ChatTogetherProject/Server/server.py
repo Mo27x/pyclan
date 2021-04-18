@@ -89,6 +89,7 @@ def threaded_client(conn):
         try:
             reply = []
             data = pickle.loads(conn.recv(4096))
+            print(data)
             if data == None:
                 break
             if not logged:
@@ -128,6 +129,7 @@ def threaded_client(conn):
                         reply.append(chat.getUsers(user.username))
                     else:
                         reply.append(False)
+                print(reply)
                 conn.send(pickle.dumps(reply))
             elif chatId == -1:
                 if data[1] == "create":
@@ -159,6 +161,7 @@ def threaded_client(conn):
                         updateUsers(user)
                         logged = True
                         reply = ["Welcome to chat together", user, logged]
+                print(reply)
                 conn.send(pickle.dumps(reply))
             else:
                 conn.send(pickle.dumps(["You typed wrong data", user]))
