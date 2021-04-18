@@ -3,6 +3,7 @@ from tkinter import messagebox
 from PIL import ImageTk,Image
 from network import Network
 from user import User
+from _thread import *
 
 def printMessages(messages):
     global listboxChat
@@ -10,6 +11,7 @@ def printMessages(messages):
         widget.destroy()
     for message in messages:
         Label(listboxChat, text= message, bg="light blue").pack(side=TOP, anchor=NW)
+
 def updateChat(value):
     global ChatNameLabel
     global chat
@@ -19,10 +21,10 @@ def updateChat(value):
         if user.chats[chatId] == chat:
             ChatsId = chatId
     getChat()
-    printUsers()
     ChatNameLabel.destroy()
     ChatNameLabel = Label(ChatNameFrame,text=("Chat Name: " + chat + " Chat Id: " + ChatsId),bg="light blue",fg="white",relief=FLAT)
     ChatNameLabel.pack()
+    printUsers(users)
 
 def printUsers(users):
     global listboxUsers
@@ -41,7 +43,7 @@ def updateChats():
     for chat in chats:
         chatCreated = Radiobutton(listboxChats,relief=FLAT,bg="light blue",text = chat,variable=r, value=chat, command=lambda: updateChat(r.get()))
         listboxChats.insert(END,chatCreated.pack())
-    printUsers()
+    printUsers(users)
 
 def sendMessage():
     global messageEntered
@@ -49,6 +51,7 @@ def sendMessage():
     global user
     global users
     global chat
+    users = []
     message = messageEntered.get()
     for chatId in user.chats:
         if user.chats[chatId] == chat:
@@ -92,6 +95,7 @@ def addChat():
     global messages
     global chats
     global addChatType
+    users = []
     chatIdName = IdNameEnter.get()
     chatCode = codeEntered.get()
     if addChatType == "create":
@@ -121,12 +125,13 @@ def addChat():
     codeEntered.pack_forget()
     IdNameEnter.pack_forget()
 
-def getChat():
+def requestChat():
     global user
     global network
     global messages
     global users
     global chat
+    users = []
     for chatId in user.chats:
         if user.chats[chatId] == chat:
             data = user.getChat(chatId, network)
@@ -137,6 +142,23 @@ def getChat():
             printUsers(users)
             break
 
+def getChat():
+    global user
+    global network
+    global messages
+    global users
+    global chat
+    while True:
+        users = []
+        for chatId in user.chats:
+            if user.chats[chatId] == chat:
+                data = user.getChat(chatId, network)
+                messages = data[0]
+                user = data[1]
+                users = data[2]
+                printMessages(messages)
+                printUsers(users)
+
 def quitChat():
     global user
     global users
@@ -146,6 +168,7 @@ def quitChat():
             data = user.quitChat(chatId, network)
             messagebox.showinfo(data[0])
             user = data[1]
+            users = []
             updateChats()
             break
 
@@ -308,6 +331,7 @@ def main():
 
     listboxChats.pack(side = LEFT, fill = BOTH, expand=True)
     scrollbarChats.pack(side = RIGHT, fill = Y)
+    start_new_thread(getChat())
 
 if __name__ == "__main__":
     main()
