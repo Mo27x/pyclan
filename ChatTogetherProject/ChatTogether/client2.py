@@ -71,8 +71,8 @@ def joinChat():
     IdNameEnter.delete(0,END)
     IdNameEnter.selection_range(0, END)
     codeEntered.selection_range(0, END)
-    codeEntered.insert(0, "Chat code here")
-    IdNameEnter.insert(0, "Chat ID here")
+    codeEntered.insert(0, "Enter chat code here: ")
+    IdNameEnter.insert(0, "Enter chat ID here: ")
 
 def createChat():
     global addChatType
@@ -82,8 +82,8 @@ def createChat():
     IdNameEnter.pack(side=BOTTOM)
     codeEntered.delete(0,END)
     IdNameEnter.delete(0,END)
-    codeEntered.insert(0, "Chat code here")
-    IdNameEnter.insert(0, "Chat name here")
+    codeEntered.insert(0, "Enter chat code here: ")
+    IdNameEnter.insert(0, "Enter chat name here: ")
 
 def addChat():
     global user
