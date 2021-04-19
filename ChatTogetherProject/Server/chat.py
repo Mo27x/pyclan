@@ -2,15 +2,15 @@ class Chat:
     def __init__(self, id, name, code, users, messages: list):
         if id != "" and name != "" and code != "":
             self.id = id
-            self.users = users
             self.name = name
             self.code = code
+            self.users = users
             self.messages = messages
         else:
             return None
 
-    def addMessage(self, userId, username, message):
-        if userId in self.users:
+    def addMessage(self, username, message):
+        if username in self.users:
             self.messages.append((str(username) + ": " + str(message)))
             return True
 

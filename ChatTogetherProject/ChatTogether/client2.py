@@ -3,7 +3,6 @@ from tkinter import messagebox
 from PIL import ImageTk,Image
 from network import Network
 from user import User
-from _thread import *
 
 def printMessages(messages):
     global listboxChat
@@ -30,6 +29,7 @@ def printUsers(users):
     global listboxUsers
     for widget in listboxUsers.winfo_children():
         widget.destroy()
+    listboxUsers.delete(0, END)
     for username in users:
         listboxUsers.insert(END, username)
 
@@ -107,6 +107,7 @@ def addChat():
             printMessages(messages)
             updateChats()
             printUsers(users)
+
     elif addChatType == "join":
         if chatIdName != "" and chatCode != "":
             data = user.joinChat(chatIdName, chatCode, network)
@@ -125,7 +126,7 @@ def addChat():
     codeEntered.pack_forget()
     IdNameEnter.pack_forget()
 
-def requestChat():
+def getChat():
     global user
     global network
     global messages
@@ -141,23 +142,6 @@ def requestChat():
             printMessages(messages)
             printUsers(users)
             break
-
-def getChat():
-    global user
-    global network
-    global messages
-    global users
-    global chat
-    while True:
-        users = []
-        for chatId in user.chats:
-            if user.chats[chatId] == chat:
-                data = user.getChat(chatId, network)
-                messages = data[0]
-                user = data[1]
-                users = data[2]
-                printMessages(messages)
-                printUsers(users)
 
 def quitChat():
     global user
@@ -202,7 +186,6 @@ def connectUser(type: str):
         UserLabel.destroy()
         UserLabel = Label(UserFrame,text=user.username,bg="light blue",fg="white",relief=FLAT)
         UserLabel.pack()
-
 
 root = Tk()
 root.title("Chat Together")
@@ -253,6 +236,7 @@ CreateChatButton = Button(UserFunctionFrame1,relief=RAISED,bg="light blue", text
 LeaveChatButton = Button(ChatNameFrame,relief=RAISED,bg="light blue",text = "Leave Chat",command=quitChat)
 JoinChatButton = Button(UserFunctionFrame1,relief=RAISED,bg="light blue",text = "Join Chat",command=joinChat)
 SendButton = Button(UserFunctionFrame2,relief=RAISED,bg="light blue",text = "Submit",command=addChat)
+UpdateChat = Button(ChatNameFrame,relief=RAISED,bg="light blue",text = "Update",command=getChat)
 SignIn = Button(logUser, text = "Sign In",command= lambda: connectUser("signin"),activebackground = "pink", activeforeground = "blue")
 Login = Button(logUser, text = "Login",command= lambda: connectUser("login"),activebackground = "pink", activeforeground = "blue")
 #enter
@@ -313,7 +297,7 @@ def main():
     LeaveChatButton.pack(fill = X, side=RIGHT)
     JoinChatButton.pack(fill = X, side=LEFT)
     SendButton.pack_forget()
-
+    UpdateChat.pack(fill = X, side=RIGHT)
     messageEntered.pack(fill = X,side=LEFT)
     codeEntered.pack_forget()
     IdNameEnter.pack_forget()
@@ -331,7 +315,6 @@ def main():
 
     listboxChats.pack(side = LEFT, fill = BOTH, expand=True)
     scrollbarChats.pack(side = RIGHT, fill = Y)
-    start_new_thread(getChat())
 
 if __name__ == "__main__":
     main()
