@@ -10,7 +10,7 @@ def printMessages(messages):
     for widget in listboxChat.winfo_children():
         widget.destroy()
     for message in messages:
-        Label(listboxChat, text= message, bg="light blue").pack(side=TOP, anchor=NW)
+        Label(listboxChat, text= message, bg="#A4ACFF").pack(side=TOP, anchor=NW)
 
 def updateChat(value):
     global ChatNameLabel
@@ -22,7 +22,7 @@ def updateChat(value):
             ChatsId = chatId
     getChat()
     ChatNameLabel.destroy()
-    ChatNameLabel = Label(ChatNameFrame,text=("Chat Name: " + chat + " Chat Id: " + ChatsId),bg="light blue",fg="white",relief=FLAT)
+    ChatNameLabel = Label(ChatNameFrame,text=("Chat Name: " + chat + " Chat Id: " + ChatsId),bg="#CBC9EB",relief=FLAT)
     ChatNameLabel.pack()
     printUsers(users)
 
@@ -42,7 +42,7 @@ def updateChats():
     for chatId in user.chats:
         chats.append(user.chats[chatId])
     for chat in chats:
-        chatCreated = Radiobutton(listboxChats,relief=FLAT,bg="light blue",text = chat,variable=r, value=chat, command=lambda: updateChat(r.get()))
+        chatCreated = Radiobutton(listboxChats,relief=FLAT,bg="#A4ACFF",text = chat,variable=r, value=chat, command=lambda: updateChat(r.get()))
         listboxChats.insert(END,chatCreated.pack())
     printUsers(users)
 
@@ -189,18 +189,18 @@ def connectUser(type: str):
             logUser.destroy()
             BackGroundFrame.pack(fill=BOTH, side=LEFT, expand=True)
         UserLabel.destroy()
-        UserLabel = Label(UserFrame,text=user.username,bg="light blue",fg="white",relief=FLAT)
+        UserLabel = Label(UserFrame,text=user.username,bg="#CBC9EB",relief=FLAT)
         UserLabel.pack()
     else:
         messagebox.showerror("Error", "Username must not be empty, Password lenght must be almost 8")
 
 root = Tk()
-root.title("Chat Together")
+root.title("Howdy")
 root.iconbitmap('./Images/ChatTogether.ico')
 root.geometry("688x270")
-root.configure(bg="light blue")
+root.configure(bg="#A4ACFF")
 root.resizable(False,False)
-logUser = Toplevel(bg="light blue")
+logUser = Toplevel(bg="#A4ACFF")
 logUser.iconbitmap('./Images/ChatTogether.ico')
 logUser.geometry("400x200")
 logUser.resizable(False,False)
@@ -220,32 +220,31 @@ messages = []
 #images
 img_messageSender= ImageTk.PhotoImage(Image.open("./Images/sendMessage.png"))
 #frame
-BackGroundFrame = LabelFrame(root, bg="light blue")
-UsersFrame = LabelFrame(BackGroundFrame,bg="light blue") 
-UsersChatFrame = LabelFrame(BackGroundFrame,bg="light blue") 
-UserFunctionFrame1 = LabelFrame(BackGroundFrame,bg="light blue")
-UserFunctionFrame2 = LabelFrame(BackGroundFrame,bg="light blue")
-ChatFrame = LabelFrame(BackGroundFrame,bg="light blue")
-ChatNameFrame = LabelFrame(BackGroundFrame,bg = "light blue")
-SendMessageFrame = LabelFrame(BackGroundFrame,bg="light blue")
-UserFrame = LabelFrame(BackGroundFrame,bg = "light blue")
-ChatSelectionFrame = LabelFrame(BackGroundFrame,bg="light blue")
+BackGroundFrame = LabelFrame(root, bg="#A4ACFF")
+UsersFrame = LabelFrame(BackGroundFrame,bg="#CBC9EB") 
+UsersChatFrame = LabelFrame(BackGroundFrame,bg="#A4ACFF") 
+UserFunctionFrame1 = LabelFrame(BackGroundFrame,bg="#A4ACFF")
+UserFunctionFrame2 = LabelFrame(BackGroundFrame,bg="#A4ACFF")
+ChatFrame = LabelFrame(BackGroundFrame)
+ChatNameFrame = LabelFrame(BackGroundFrame,bg = "#CBC9EB")
+SendMessageFrame = LabelFrame(BackGroundFrame,bg="#A4ACFF")
+UserFrame = LabelFrame(BackGroundFrame,bg = "#CBC9EB")
+ChatSelectionFrame = LabelFrame(BackGroundFrame,bg="#A4ACFF")
 #label
 welcome = Label(logUser, text="Welcome to Chat Together")
 usernameLabel = Label(logUser, text = "Username")
 passwordLabel = Label(logUser, text = "Password")
-UserLabel = Label(UserFrame,text='',bg="light blue",fg="white",relief=FLAT)
-ChatNameLabel = Label(ChatNameFrame,text="ChatName",bg="light blue",fg="white",relief=FLAT)
-
+UsersLabel = Label(UsersFrame,text="Users",bg="#CBC9EB",relief=FLAT)
+UserLabel = Label(UserFrame,text='',bg="#CBC9EB",relief=FLAT)
+ChatNameLabel = Label(ChatNameFrame,text="ChatName",bg="#CBC9EB",relief=FLAT)
 #button
-MessageSender = Button(SendMessageFrame,width=20,relief=FLAT,bg="light blue",command=sendMessage, image = img_messageSender)
-CreateChatButton = Button(UserFunctionFrame1,relief=RAISED,bg="light blue", text = "Create Chat",command=createChat)
-LeaveChatButton = Button(ChatNameFrame,relief=RAISED,bg="light blue",text = "Leave Chat",command=quitChat)
-JoinChatButton = Button(UserFunctionFrame1,relief=RAISED,bg="light blue",text = "Join Chat",command=joinChat)
-SendButton = Button(UserFunctionFrame2,relief=RAISED,bg="light blue",text = "Submit",command=addChat)
-UpdateChat = Button(ChatNameFrame,relief=RAISED,bg="light blue",text = "Update",command=getChat)
+MessageSender = Button(SendMessageFrame,width=20,relief=FLAT,bg="#8EB5F0",command=sendMessage, image = img_messageSender)
+CreateChatButton = Button(UserFunctionFrame1,relief=RAISED,bg="#8EB5F0", text = "Create Chat",command=createChat)
+LeaveChatButton = Button(ChatNameFrame,relief=RAISED,bg="#8EB5F0",text = "Leave Chat",command=quitChat)
+JoinChatButton = Button(UserFunctionFrame1,relief=RAISED,bg="#8EB5F0",text = "Join Chat",command=joinChat)
+SendButton = Button(UserFunctionFrame2,relief=RAISED,bg="#8EB5F0",text = "Submit",command=addChat)
 SignIn = Button(logUser, text = "Sign In",command= lambda: connectUser("signin"),activebackground = "pink", activeforeground = "blue")
-Login = Button(logUser, text = "Login",command= lambda: connectUser("login"),activebackground = "pink", activeforeground = "blue")
+Login = Button(logUser, text = "Log In",command= lambda: connectUser("login"),activebackground = "pink", activeforeground = "blue")
 #enter
 usernameEnter = Entry(logUser,width = 20)
 passwordEnter = Entry(logUser, show='*', width = 20)
@@ -253,18 +252,18 @@ codeEntered = Entry(UserFunctionFrame2, width=20)
 IdNameEnter = Entry(UserFunctionFrame2,width=20)
 messageEntered = Entry(SendMessageFrame,width=60)
 #scrollbar
-listboxChat = Listbox(ChatFrame, bg="light blue")
+listboxChat = Listbox(ChatFrame, bg="#A4ACFF")
 scrollbarChatY = Scrollbar(ChatFrame, orient=VERTICAL)
 scrollbarChatX = Scrollbar(listboxChat, orient=HORIZONTAL)
-canvasChat = Canvas(ChatFrame,bg="light blue")
+canvasChat = Canvas(ChatFrame,bg="#A4ACFF")
 
-listboxUsers = Listbox(UsersChatFrame, bg="light blue")
+listboxUsers = Listbox(UsersChatFrame, bg="#A4ACFF")
 scrollbarUsers = Scrollbar(UsersChatFrame)
-canvasUsers = Canvas(UsersChatFrame, bg="light blue")
+canvasUsers = Canvas(UsersChatFrame, bg="#A4ACFF")
 
-listboxChats = Listbox(ChatSelectionFrame, bg="light blue")
+listboxChats = Listbox(ChatSelectionFrame, bg="#A4ACFF")
 scrollbarChats = Scrollbar(ChatSelectionFrame)
-canvasChats = Canvas(ChatSelectionFrame, bg="light blue")
+canvasChats = Canvas(ChatSelectionFrame, bg="#A4ACFF")
 
 listboxChat.config(yscrollcommand=scrollbarChatY.set, xscrollcommand=scrollbarChatX.set)
 scrollbarChatY.config(command= listboxChat.yview)
@@ -286,10 +285,6 @@ def main():
     passwordLabel.place(x = 30 , y = 90)
     passwordEnter.place(x = 120 , y = 90)
  
-    #Labels
-    UsersLabel = Label(UsersFrame,text="Users",bg="light blue",fg="white",relief=FLAT)
-    UserLabel.pack()
-
     UserFrame.grid(row=0,column=0, sticky="nsew")
     ChatSelectionFrame.grid(row=1,column=0,sticky="nsew")
     ChatNameFrame.grid(row=0,column=1, sticky="nsew")
@@ -305,7 +300,6 @@ def main():
     LeaveChatButton.pack(fill = X, side=RIGHT)
     JoinChatButton.pack(fill = X, side=LEFT)
     SendButton.pack_forget()
-    UpdateChat.pack(fill = X, side=RIGHT)
     messageEntered.pack(fill = X,side=LEFT)
     codeEntered.pack_forget()
     IdNameEnter.pack_forget()

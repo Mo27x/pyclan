@@ -8,7 +8,7 @@ from chat import Chat
 from user import User
 import time
 
-server = "192.168.1.27"
+server = "192.168.1.2"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
