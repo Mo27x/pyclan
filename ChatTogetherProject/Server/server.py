@@ -6,13 +6,16 @@ import string
 import random
 from chat import Chat
 from user import User
+import time
 
 server = "192.168.1.27"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+usernames = []
 with open("usernames.txt", "r") as usernamesFile:
     usernames = usernamesFile.readlines()
+chatsId = []
 with open("chatsId.txt", "r") as chatsIdFile:
     chatsId = chatsIdFile.readlines()
 chats = {}
@@ -48,7 +51,7 @@ def threaded_client(conn):
     user = None
     logged = False
     while True:
-        # try:
+        try:
             reply = []
             data = pickle.loads(conn.recv(4096))
             if data == None:
@@ -118,33 +121,29 @@ def threaded_client(conn):
                 conn.send(pickle.dumps(reply))
             else:
                 conn.send(pickle.dumps(["You typed wrong data", user]))
-        # except KeyboardInterrupt:
-        #     break
+        except:
+            break
     print("Lost Connection")
     conn.close()
 
 def accept_connections():
-    conn, addr = s.accept()
-    print("Connected to: ", addr)
-    start_new_thread(threaded_client, (conn,))
-
-try:
-    start_new_thread(accept_connections, ())
     while True:
-        pass
-except KeyboardInterrupt:
-    print("Program termianted")
-    with open("usernames.txt", "w") as usernamesFile:
-        for username in usernames:
-            usernamesFile.write(username)
+        conn, addr = s.accept()
+        print("Connected to: ", addr)
+        start_new_thread(threaded_client, (conn,))
 
-    with open("chatsId.txt", "w") as chatsIdFile:
-        for chatId in chatsId:
-            chatsIdFile.write(chatId)
-    
-    with open("chats.json", "w") as chatsFile:
-        json.dump(chats,chatsFile)
-
-    with open("users.json", "w") as usersFile:
-        json.dump(users,usersFile)
-    exit()
+while True:
+    try:
+        start_new_thread(accept_connections, ())
+        time.sleep(1)
+    except KeyboardInterrupt:
+        print("Program termianted")
+        with open("usernames.txt", "w") as usernamesFile:
+            usernamesFile.writelines(usernames)
+        with open("chatsId.txt", "w") as chatsIdFile:
+            chatsIdFile.writelines(chatsId)
+        with open("chats.json", "w") as chatsFile:
+            json.dump(chats,chatsFile)
+        with open("users.json", "w") as usersFile:
+            json.dump(users,usersFile)
+        exit()

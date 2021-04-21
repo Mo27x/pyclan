@@ -1,13 +1,9 @@
 from network import Network
 class User:
     def __init__(self, username, password, chats: dict):
-        if username != "" and len(username) <= 10 and len(password) >= 8:
-            self.username = username
-            self.password = password
-            self.chats = chats
-        else:
-            self = None
-            return self      
+        self.username = username
+        self.password = password
+        self.chats = chats
 
     def signin(self, network):
         return network.send([self,"signin", -1])

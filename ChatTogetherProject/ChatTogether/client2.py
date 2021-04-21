@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from PIL import ImageTk,Image
+from _thread import *
 from network import Network
 from user import User
 
@@ -98,8 +99,9 @@ def addChat():
     users = []
     chatIdName = IdNameEnter.get()
     chatCode = codeEntered.get()
+    
     if addChatType == "create":
-        if chatIdName != "" and chatCode != "":
+        if chatIdName != "" and len(chatIdName) <= 10  and chatCode != "":
             data = user.createChat(chatIdName, chatCode, network)
             messages = data[0]
             user = data[1]
@@ -107,19 +109,24 @@ def addChat():
             printMessages(messages)
             updateChats()
             printUsers(users)
-
+        else:
+            messagebox.showerror("Adding chat error", "None of the fields must be empty and the lenght of the name of the chat must be less than 11")
     elif addChatType == "join":
         if chatIdName != "" and chatCode != "":
             data = user.joinChat(chatIdName, chatCode, network)
-            if data[0] != "Id or code is wrong":
-                messages = data[0]
-            else:
+            if data[0] == "Id or code is wrong" or data[0] == "You typed wrong data":
                 messagebox.showerror("Joining error", data[0])
-            user = data[1]
-            users = data[2]
-            printMessages(messages)
-            updateChats()
-            printUsers(users)
+            else:
+                messages = data[0]
+                user = data[1]
+                users = data[2]
+                printMessages(messages)
+                updateChats()
+                printUsers(users)
+
+        else:
+            messagebox.showerror("Adding chat error", "None of the fields must be empty")
+        
     SendButton.pack_forget()
     codeEntered.delete(0,END)
     IdNameEnter.delete(0,END)
@@ -142,6 +149,7 @@ def getChat():
             printMessages(messages)
             printUsers(users)
             break
+    root.update_idletasks()
 
 def quitChat():
     global user
@@ -164,12 +172,9 @@ def connectUser(type: str):
     global UserLabel
     username = usernameEnter.get()
     password = passwordEnter.get()
-    if username != "" and len(password) >= 8:
-        user = User(username, password, {})
-        network = Network()
-        UserLabel.pack()
-        if user == None:
-            messagebox.showerror("Error", "Username must not be empty, Password lenght must be almost 8")
+    user = User(username, password, {})
+    network = Network()
+    if user.username != "" and len(user.username) <= 10 and len(user.password) >= 8:
         data = []
         if type == "login":
             data = user.login(network)
@@ -186,6 +191,8 @@ def connectUser(type: str):
         UserLabel.destroy()
         UserLabel = Label(UserFrame,text=user.username,bg="light blue",fg="white",relief=FLAT)
         UserLabel.pack()
+    else:
+        messagebox.showerror("Error", "Username must not be empty, Password lenght must be almost 8")
 
 root = Tk()
 root.title("Chat Together")
@@ -197,13 +204,13 @@ logUser = Toplevel(bg="light blue")
 logUser.iconbitmap('./Images/ChatTogether.ico')
 logUser.geometry("400x200")
 logUser.resizable(False,False)
-user = User("Username", "Password", {})
 network = None
 logged = False
 isLogin = False
+user = None
 addChatType = ""
 chat = ""
-r =StringVar()
+r = StringVar()
 
 Open = False
 users = []
@@ -227,7 +234,7 @@ ChatSelectionFrame = LabelFrame(BackGroundFrame,bg="light blue")
 welcome = Label(logUser, text="Welcome to Chat Together")
 usernameLabel = Label(logUser, text = "Username")
 passwordLabel = Label(logUser, text = "Password")
-UserLabel = Label(UserFrame,text=user.username,bg="light blue",fg="white",relief=FLAT)
+UserLabel = Label(UserFrame,text='',bg="light blue",fg="white",relief=FLAT)
 ChatNameLabel = Label(ChatNameFrame,text="ChatName",bg="light blue",fg="white",relief=FLAT)
 
 #button
@@ -281,6 +288,7 @@ def main():
  
     #Labels
     UsersLabel = Label(UsersFrame,text="Users",bg="light blue",fg="white",relief=FLAT)
+    UserLabel.pack()
 
     UserFrame.grid(row=0,column=0, sticky="nsew")
     ChatSelectionFrame.grid(row=1,column=0,sticky="nsew")
@@ -318,4 +326,11 @@ def main():
 
 if __name__ == "__main__":
     main()
-root.mainloop()
+
+while True:
+    try:
+        root.update()
+        if chat != "":
+            getChat()
+    except:
+        pass

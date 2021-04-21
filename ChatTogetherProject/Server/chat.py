@@ -22,6 +22,8 @@ class Chat:
         if self.code == code and self.id == id and username not in self.users:
             self.users.append(username)
             return True
+        else:
+            return False
     
     def removeUser(self, username):
         if username in self.users:
