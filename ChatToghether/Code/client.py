@@ -2,8 +2,11 @@ from tkinter import *
 from network import Network
 from user import User
 <<<<<<< HEAD:ChatToghether/Code/client.py
+<<<<<<< HEAD:ChatToghether/Code/client.py
 <<<<<<< HEAD:ChatTogether/Code/client.py
 =======
+=======
+>>>>>>> parent of 720826a (Updated):ChatTogetherProject/ChatTogether/client.py
 import time
 
 def sendMessage(user, network):
@@ -52,6 +55,7 @@ def main():
     while username == "":
         username = input("Insert your username: ")
     password = input("Insert your password: ")
+<<<<<<< HEAD:ChatToghether/Code/client.py
 >>>>>>> parent of 720826a (Updated):ChatTogetherProject/ChatTogether/client.py
 
     user = User(username, password, {})
@@ -469,10 +473,34 @@ main()
         elif function == "5":
             chatData = getChat(user, network)
         else:
+=======
+
+    user = User(username, password, {})
+    network = Network()
+    while True:
+        function = input("What do you want to do(1: create a chat, 2: join a chat, 3: send a message, 4: quit a chat, other: view messages): ")
+        chatData = []
+        if function == "1":
+            chatData = createChat(user, network)
+            print("The ID of the chat you created is: ", chatData[3])
+        elif function == "2":
+            chatData = joinChat(user, network)
+        elif function == "3":
+            chatData = sendMessage(user, network)
+        elif function == "4":
+            chatData = quitChat(user, network)
+        elif function == "5":
+            chatData = getChat(user, network)
+        else:
+>>>>>>> parent of 720826a (Updated):ChatTogetherProject/ChatTogether/client.py
             chatData = login(user, network)
         user = chatData[1]
         print(chatData[0])
         if function == "3":
             print(chatData[2])
+<<<<<<< HEAD:ChatToghether/Code/client.py
+main()
+>>>>>>> parent of 720826a (Updated):ChatTogetherProject/ChatTogether/client.py
+=======
 main()
 >>>>>>> parent of 720826a (Updated):ChatTogetherProject/ChatTogether/client.py
