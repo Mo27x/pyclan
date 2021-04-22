@@ -5,6 +5,7 @@ root = Tk()
 root.title("Chat Together")
 root.geometry("400x250")
 
+<<<<<<< HEAD:ChatTogether/Code/gui.py
 def showId():
     global ID
     global e2
@@ -22,6 +23,12 @@ Login=Button(root, text = "Login",command=showId,activebackground = "pink", acti
 
 username = Label(root, text = "Username").place(x = 30,y = 100)  
 ID = Label(root, text = "ID")  
+=======
+Label1=Label(root,text="Inserisci l'username")
+Label2=Label(root,text="Inserisci la password")
+Label1.grid(row=0,column=0,pady=20,padx=20)
+Label2.grid(row=0,column=1,pady=20,padx=20)
+>>>>>>> parent of f955452 (Ready to add GUI):ChatToghether/Code/gui.py
 
 e1 = Entry(root,width = 20).place(x = 120, y = 100)  
 e2 = Entry(root, width = 20)

@@ -2,17 +2,28 @@ import socket
 import pickle
 
 class Network:
-    def __init__(self):
+    def __init__(self):#Constructor
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # self.server = "176.206.45.158"
         self.server = "192.168.1.27"
         self.port = 5555
         self.addr = (self.server, self.port)
+<<<<<<< HEAD:ChatTogether/Code/network.py
         self.connect()
+=======
+        self.p =  self.connect()
+
+    def getP(self):#returns the user ID
+        return self.p
+>>>>>>> parent of f955452 (Ready to add GUI):ChatToghether/Code/network.py
 
     def connect(self):#connect user to server
         try:
             self.client.connect(self.addr)
+<<<<<<< HEAD:ChatTogether/Code/network.py
+=======
+            return self.client.recv(2048)
+>>>>>>> parent of f955452 (Ready to add GUI):ChatToghether/Code/network.py
         except:
             pass
 
