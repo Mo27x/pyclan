@@ -29,7 +29,7 @@ def connectUser(type: str):
         else:
             logUser.destroy()
             backgroundFrame.pack(fill=BOTH, side=LEFT, expand=True)
-        userLabel = Label(userFrame,text=user.username,bg="#CBC9EB",relief=FLAT, font = test).pack(side = LEFT)
+        Label(userFrame,text=user.username,bg="#CBC9EB",relief=FLAT, font = test).pack(side = LEFT)
 
     else:
         messagebox.showerror("Error", "Username must not be empty and its length must be less than 9, Password lenght must be almost 8")
@@ -249,7 +249,6 @@ IdNameEnter = Entry(addChatFrame,width=20)
 messageEntered = Entry(sendMessageFrame,width=60)
 
 #scrollbar
-#chat
 containerChat = Frame(ChatFrame, bg="#A4ACFF")
 canvasChat = Canvas(containerChat, bg="#A4ACFF")
 scrollbarChatY = Scrollbar(containerChat, orient="vertical", command=canvasChat.yview, bg="#A4ACFF")
