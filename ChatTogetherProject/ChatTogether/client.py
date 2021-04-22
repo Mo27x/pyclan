@@ -103,8 +103,7 @@ def updateChats():
     for chatId in user.chats:
         chats.append(user.chats[chatId])
     for chat in chats:
-        chatCreated = Radiobutton(scrollableChats_frame,relief=FLAT,bg="#A4ACFF",text= chat,variable=r, value=chat, command=lambda: updateChat(r.get()), font = test).pack()
-        #listboxChats.insert(END,chatCreated.pack())
+        Radiobutton(scrollableChats_frame,relief=FLAT,bg="#A4ACFF",text= chat,variable=r, value=chat, command=lambda: updateChat(r.get()), font = test).pack()
     printUsers(users)
 
 def sendMessage():
@@ -194,11 +193,11 @@ def printMessages(messages):
 
 root = Tk()
 root.title("Howdy")
-root.iconbitmap('./Images/ChatTogether.ico')
+root.iconbitmap('./Images/howdy.ico')
 root.configure(bg="#A4ACFF")
 root.resizable(False,False)
 logUser = Toplevel(bg="#A4ACFF")
-logUser.iconbitmap('./Images/ChatTogether.ico')
+logUser.iconbitmap('./Images/howdy.ico')
 logUser.geometry("400x200")
 logUser.resizable(False,False)
 network = None
@@ -240,8 +239,8 @@ createChatButton = Button(userFunctionFrame,relief=RAISED,bg="#8EB5F0", text = "
 leaveChatButton = Button(chatNameFrame,relief=RAISED,bg="#8EB5F0",text = "Leave Chat",command=quitChat, font = test)
 joinChatButton = Button(userFunctionFrame,relief=RAISED,bg="#8EB5F0",text = "Join Chat",command=joinChat, font = test)
 sendButton = Button(addChatFrame,relief=RAISED,bg="#8EB5F0",text = "Submit",command=addChat, font = test)
-signin = Button(logUser, text = "Sign In",command= lambda: connectUser("signin"), bg="#8EB5F0", font = test)
-login = Button(logUser, text = "Log In",command= lambda: connectUser("login"), bg="#8EB5F0", font = test)
+signin = Button(logUser, text = "SignUp",command= lambda: connectUser("signin"), bg="#8EB5F0", font = test)
+login = Button(logUser, text = "LogIn",command= lambda: connectUser("login"), bg="#8EB5F0", relief=FLAT, font = test)
 #enter
 usernameEnter = Entry(logUser,width = 20)
 passwordEnter = Entry(logUser, show='*', width = 20)
@@ -254,14 +253,16 @@ messageEntered = Entry(sendMessageFrame,width=60)
 containerChat = Frame(ChatFrame, bg="#A4ACFF")
 canvasChat = Canvas(containerChat, bg="#A4ACFF")
 scrollbarChatY = Scrollbar(containerChat, orient="vertical", command=canvasChat.yview, bg="#A4ACFF")
+scrollbarChatX = Scrollbar(ChatFrame, orient="horizontal", command=canvasChat.xview, bg="#A4ACFF")
 scrollableChat_frame = Frame(canvasChat , bg="#A4ACFF")
 scrollableChat_frame.bind("<Configure>",lambda e: canvasChat.configure(scrollregion=canvasChat.bbox("all")))
 canvasChat.create_window((0, 0), window=scrollableChat_frame, anchor="nw")
-canvasChat.configure(yscrollcommand=scrollbarChatY.set)
+canvasChat.configure(yscrollcommand=scrollbarChatY.set, xscrollcommand=scrollbarChatX.set)
 
 containerChat.pack()
 canvasChat.pack(side="left", fill="both", expand=True)
 scrollbarChatY.pack(side="right", fill="y")
+scrollbarChatX.pack(side="bottom", fill="x")
 #chats
 containerChats = Frame(chatSelectionFrame, bg="#A4ACFF")
 canvasChats = Canvas(containerChats,width= 150, bg="#A4ACFF")
@@ -287,12 +288,10 @@ containerUsers.pack()
 canvasUsers.pack(side="left", fill="both", expand=True)
 scrollbarUsersY.pack(side="right", fill="y")
 
-
-
 def main():
     welcome.place(x= 120, y= 10)
-    signin.place(x= 120, y= 120)
-    login.place(x= 200, y= 120)
+    signin.place(x= 183, y= 120)
+    login.place(x= 120, y= 120)
     usernameEnter.place(x = 120, y = 50)
     usernameLabel.place(x = 30, y = 50)
     passwordLabel.place(x = 30 , y = 90)
@@ -315,7 +314,7 @@ def main():
     leaveChatButton.pack(fill = X, side=RIGHT)
     joinChatButton.pack(fill = X, side=LEFT)
     sendButton.pack_forget()
-    messageEntered.pack(fill = X,side=LEFT)
+    messageEntered.pack(fill = X,side=LEFT, expand=True)
     codeEntered.pack_forget()
     IdNameEnter.pack_forget()
 
