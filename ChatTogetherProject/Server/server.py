@@ -8,7 +8,7 @@ from chat import Chat
 from user import User
 import time
 
-server = "192.168.1.2"
+server = "192.168.1.27"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -47,6 +47,7 @@ def threaded_client(conn):
     global users
     global chats
     global usernames
+    global chatsId
     reply = []
     user = None
     logged = False
@@ -95,7 +96,7 @@ def threaded_client(conn):
                     chatId = get_random_id()
                     while chatId in chatsId:
                         chatId = get_random_id()
-                    chat = Chat(chatId, data[3], data[4], [user.username], ["Let's groove chatting on chatTogether"])
+                    chat = Chat(chatId, data[3], data[4], [user.username], ["Let's groove chatting on Howdy"])
                     chats[chat.id] = chat.__dict__
                     user.addChat(chat.id, chat.name)
                     chatsId.append(chat.id)
@@ -103,11 +104,10 @@ def threaded_client(conn):
                     reply2 = [user, chat.getUsers(user.username), chat.id]
                     reply.extend(reply2)
                 elif data[1] == "login":
-                    if user.username in users:
-                        if user.username == users[user.username]["username"] and user.password == users[user.username]["password"]:
-                            user = assembleUserClass(users[user.username])
-                            logged = True
-                            reply = ["Welcome back to chat together", user, logged]
+                    if user.username == users[user.username]["username"] and user.password == users[user.username]["password"]:
+                        user = assembleUserClass(users[user.username])
+                        logged = True
+                        reply = ["Welcome back to chat together", user, logged]
                     else:
                         reply = ["Username or password is wrong", user, logged]
                 elif data[1] == "signin":
@@ -117,7 +117,7 @@ def threaded_client(conn):
                         users[user.username] = user.__dict__
                         usernames.append(user.username)
                         logged = True
-                        reply = ["Welcome to chat together", user, logged]
+                        reply = ["Welcome to Howdy", user, logged]
                 conn.send(pickle.dumps(reply))
             else:
                 conn.send(pickle.dumps(["You typed wrong data", user]))
@@ -139,9 +139,11 @@ while True:
     except KeyboardInterrupt:
         print("Program termianted")
         with open("usernames.txt", "w") as usernamesFile:
-            usernamesFile.writelines(usernames)
+            for username in usernames:
+                usernamesFile.write(username + "\n")
         with open("chatsId.txt", "w") as chatsIdFile:
-            chatsIdFile.writelines(chatsId)
+            for chatId in chatsId:
+                chatsIdFile.write(chatId + "\n")
         with open("chats.json", "w") as chatsFile:
             json.dump(chats,chatsFile)
         with open("users.json", "w") as usersFile:

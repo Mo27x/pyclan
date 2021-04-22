@@ -1,4 +1,3 @@
-from network import Network
 class User:
     def __init__(self, username, password, chats: dict):
         self.username = username
