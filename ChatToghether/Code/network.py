@@ -4,6 +4,7 @@ import pickle
 class Network:
     def __init__(self):#Constructor
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+<<<<<<< HEAD:ChatToghether/Code/network.py
 <<<<<<< HEAD
         # self.server = "176.206.45.158"
         self.server = "192.168.1.27"
@@ -11,6 +12,10 @@ class Network:
         self.server = "176.206.56.226"
         server = "192.168.1.27"
 >>>>>>> parent of 1fd383d (Now we can test)
+=======
+        self.server = "176.206.45.158"
+        # self.server = "192.168.1.27"
+>>>>>>> parent of 720826a (Updated):ChatTogetherProject/ChatTogether/network.py
         self.port = 5555
         self.addr = (self.server, self.port)
 <<<<<<< HEAD:ChatTogether/Code/network.py

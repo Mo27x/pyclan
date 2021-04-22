@@ -1,218 +1,330 @@
 from tkinter import *
 from tkinter import messagebox
 from PIL import ImageTk,Image
+from _thread import *
 from network import Network
 from user import User
-import time
 
-root = Tk()
-root.title("Chat Together")
-"Images\ChatToghether.ico"
-# root.iconbitmap('./Images/ChatTogether.ico')
-root.geometry("800x500")
-#open Chat interface
-logUser = Toplevel()
-logUser.geometry("400x250")
-# logged: says if you are already Signed in
-logged = False
-# isLogin: determine if you are Logging in or Signing in
-isLogin = False
-user = None
-network = None
-def sendMessage(user, network):
-    message = ""
-    while message == "":
-        message = input("Insert the message you want to send: ")
-    chatId = ""
-    while chatId == "" or len(chatId) != 6:
-        chatId = input("Insert the id of the chat: ")
-    return network.send([user, "add", chatId, message])
-def joinChat(user, network):
-    chatCode = ""
-    while chatCode == "":
-        chatCode = input("Insert the chat's code: ")
-    chatId = ""
-    while chatId == "" or len(chatId) != 6:
-        chatId = input("Insert the chat's ID: ")
-    return network.send([user, "join", chatId, chatCode])
+def printMessages(messages):
+    global listboxChat
+    for widget in listboxChat.winfo_children():
+        widget.destroy()
+    for message in messages:
+        Label(listboxChat, text= message, bg="#A4ACFF").pack(side=TOP, anchor=NW)
 
-def createChat(user, network):
-    chatName = ""
-    chatCode = ""
-    while chatName == "":
-        chatName = input("Insert the name of the chat you want to create: ")
-    while chatCode == "":
-        chatCode = input("Insert the code of the chat you want to create: ")
-    return network.send([user, "create", -1, chatName, chatCode])
+def updateChat(value):
+    global ChatNameLabel
+    global chat
+    chat = value
+    ChatsId = ""
+    for chatId in user.chats:
+        if user.chats[chatId] == chat:
+            ChatsId = chatId
+    getChat()
+    ChatNameLabel.destroy()
+    ChatNameLabel = Label(ChatNameFrame,text=("Chat Name: " + chat + " Chat Id: " + ChatsId),bg="#CBC9EB",relief=FLAT)
+    ChatNameLabel.pack()
+    printUsers(users)
 
-def getChat(user, network):
-    chatId = ""
-    while chatId == "" or len(chatId) != 6:
-        chatId = input("Insert the chat's ID: ")
-    return network.send([user, "get", chatId])
+def printUsers(users):
+    global listboxUsers
+    for widget in listboxUsers.winfo_children():
+        widget.destroy()
+    listboxUsers.delete(0, END)
+    for username in users:
+        listboxUsers.insert(END, username)
 
-def quitChat(user, network):
-    chatId = ""
-    while chatId == "" or len(chatId) != 6:
-        chatId = input("Insert the id of the chat you want to delete: ")
-    return network.send([user, "quit", chatId])
+def updateChats():
+    global chats
+    for widget in listboxChats.winfo_children():
+        widget.destroy()
+    chats = []
+    for chatId in user.chats:
+        chats.append(user.chats[chatId])
+    for chat in chats:
+        chatCreated = Radiobutton(listboxChats,relief=FLAT,bg="#A4ACFF",text = chat,variable=r, value=chat, command=lambda: updateChat(r.get()))
+        listboxChats.insert(END,chatCreated.pack())
+    printUsers(users)
 
-def startUser():
-    global idEnter
+def sendMessage():
+    global messageEntered
+    global messages
+    global user
+    global users
+    global chat
+    users = []
+    message = messageEntered.get()
+    for chatId in user.chats:
+        if user.chats[chatId] == chat:
+            data = user.sendMessage(message,chatId,network)
+            messages = data[0]
+            user = data[1]
+            users = data[2]
+            messageEntered.delete(0, END)
+            MessageSender.pack(side=RIGHT)
+            printMessages(messages)
+            break
+
+def joinChat():
+    global addChatType
+    addChatType = "join"
+    SendButton.pack(fill = X, side=BOTTOM)
+    codeEntered.pack(side=BOTTOM)
+    IdNameEnter.pack(side=BOTTOM)
+    codeEntered.delete(0,END)
+    IdNameEnter.delete(0,END)
+    IdNameEnter.selection_range(0, END)
+    codeEntered.selection_range(0, END)
+    codeEntered.insert(0, "Enter chat code here: ")
+    IdNameEnter.insert(0, "Enter chat ID here: ")
+
+def createChat():
+    global addChatType
+    addChatType = "create"
+    SendButton.pack(fill = X, side=BOTTOM)
+    codeEntered.pack(side=BOTTOM)
+    IdNameEnter.pack(side=BOTTOM)
+    codeEntered.delete(0,END)
+    IdNameEnter.delete(0,END)
+    codeEntered.insert(0, "Enter chat code here: ")
+    IdNameEnter.insert(0, "Enter chat name here: ")
+
+def addChat():
+    global user
+    global network
+    global users
+    global messages
+    global chats
+    global addChatType
+    users = []
+    chatIdName = IdNameEnter.get()
+    chatCode = codeEntered.get()
+    
+    if addChatType == "create":
+        if chatIdName != "" and len(chatIdName) <= 10  and chatCode != "":
+            data = user.createChat(chatIdName, chatCode, network)
+            messages = data[0]
+            user = data[1]
+            users = data[2]
+            printMessages(messages)
+            updateChats()
+            printUsers(users)
+        else:
+            messagebox.showerror("Adding chat error", "None of the fields must be empty and the lenght of the name of the chat must be less than 11")
+    elif addChatType == "join":
+        if chatIdName != "" and chatCode != "":
+            data = user.joinChat(chatIdName, chatCode, network)
+            if data[0] == "Id or code is wrong" or data[0] == "You typed wrong data":
+                messagebox.showerror("Joining error", data[0])
+            else:
+                messages = data[0]
+                user = data[1]
+                users = data[2]
+                printMessages(messages)
+                updateChats()
+                printUsers(users)
+
+        else:
+            messagebox.showerror("Adding chat error", "None of the fields must be empty")
+        
+    SendButton.pack_forget()
+    codeEntered.delete(0,END)
+    IdNameEnter.delete(0,END)
+    codeEntered.pack_forget()
+    IdNameEnter.pack_forget()
+
+def getChat():
+    global user
+    global network
+    global messages
+    global users
+    global chat
+    users = []
+    for chatId in user.chats:
+        if user.chats[chatId] == chat:
+            data = user.getChat(chatId, network)
+            messages = data[0]
+            user = data[1]
+            users = data[2]
+            printMessages(messages)
+            printUsers(users)
+            break
+    root.update_idletasks()
+
+def quitChat():
+    global user
+    global users
+    global chat
+    for chatId in user.chats:
+        if user.chats[chatId] == chat:
+            data = user.quitChat(chatId, network)
+            messagebox.showinfo(data[0])
+            user = data[1]
+            users = []
+            updateChats()
+            break
+
+def connectUser(type: str):
     global user
     global network
     global logged
-    global logUse
-    global BackGroundFrame
-    username = Username.get()
-    userId = ""
-    if isLogin:
-        userId = idEnter.get()
-        if username != "" and userId != "" and len(userId) == 6:
-            user = User(username, userId, {})
-            network = Network()
-            logged = True
+    global logUser
+    global UserLabel
+    username = usernameEnter.get()
+    password = passwordEnter.get()
+    user = User(username, password, {})
+    network = Network()
+    if user.username != "" and len(user.username) <= 10 and len(user.password) >= 8:
+        data = []
+        if type == "login":
+            data = user.login(network)
+        elif type == "signin":
+            data = user.signin(network)
+        logged = data[2]
+        user = data[1]
+        updateChats()
+        if logged == False:
+            messagebox.showerror("Connection error", data[0])
+        else:
+            logUser.destroy()
             BackGroundFrame.pack(fill=BOTH, side=LEFT, expand=True)
-    elif username != "" and userId == "":
-        user = User(username, "", {})
-        network = Network()
-        user.id = network.getId()
-        print(user.id)
-        logged = True
-        BackGroundFrame.pack(fill=BOTH, side=LEFT, expand=True)
-    logUser.destroy()
+        UserLabel.destroy()
+        UserLabel = Label(UserFrame,text=user.username,bg="#CBC9EB",relief=FLAT)
+        UserLabel.pack()
+    else:
+        messagebox.showerror("Error", "Username must not be empty, Password lenght must be almost 8")
 
-def showId():
-    global idLabel
-    global idEnter
-    global isLogin
-    isLogin = True
-    idLabel.place(x=30,y=140)
-    idEnter.place(x = 120, y = 140)
+root = Tk()
+root.title("Howdy")
+root.iconbitmap('./Images/ChatTogether.ico')
+root.geometry("688x270")
+root.configure(bg="#A4ACFF")
+root.resizable(False,False)
+logUser = Toplevel(bg="#A4ACFF")
+logUser.iconbitmap('./Images/ChatTogether.ico')
+logUser.geometry("400x200")
+logUser.resizable(False,False)
+network = None
+logged = False
+isLogin = False
+user = None
+addChatType = ""
+chat = ""
+r = StringVar()
 
-def hideId():
-    global idLabel
-    global e2
-    global isLogin
-    isLogin = False
-    idLabel.place_forget()
-    idEnter.place_forget()
+Open = False
+users = []
+chats = []
+messages = []
 
-def join():
-    UserOptionsMessage1.config(text="Id")
-    UserOptionsMessage2.config(text="Code")
-
-def create():
-    UserOptionsMessage1.config(text="Name")
-    UserOptionsMessage2.config(text="Code")
-  
-def leave():
-    UserOptionsMessage1.config(text="Name")
-    UserOptionsMessage2.config(text="Id")
-
-def sent():
-    UserOptionsMessage1.config(text="")
-    UserOptionsMessage2.config(text="")
-
-
-#dinno variables(images)
+#images
 img_messageSender= ImageTk.PhotoImage(Image.open("./Images/sendMessage.png"))
-
-#dinno variables(Frames)
-BackGroundFrame = Frame(root, bg="light blue")#its the base frame
-UserFrame = Frame(BackGroundFrame,bg = "light blue")#create a frame for the chat
-ChatSelectionFrame = Frame(BackGroundFrame,bg="light blue")#create a frame for the selection of a chat
-ChatNameFrame = Frame(BackGroundFrame,bg = "light blue")#create a frame for the chat name
-ChatFrame = Frame(BackGroundFrame,bg="light blue")#create a frame for the chat
-UserFunctionFrame1 = Frame(BackGroundFrame,bg="light blue",padx=20,pady=20)#create a frame for the send messages
-SendMessageFrame = Frame(BackGroundFrame,bg="light blue")#create a frame for the send messages
-
-idEnter = Entry(logUser, width = 20)
-Username = StringVar()
-usernaneEnter = Entry(logUser,textvariable = Username,width = 20)
-#dinno variables
-message = StringVar()#create message string
-messageEntered = Entry(SendMessageFrame,textvariable = message,width=60)#create textBox
-code = StringVar()#create message string
-codeEntered = Entry(UserFunctionFrame1,textvariable = code,width=20)
-Id = StringVar()#create message string
-IdEntered = Entry(UserFunctionFrame1,textvariable = Id,width=20)
-
+#frame
+BackGroundFrame = LabelFrame(root, bg="#A4ACFF")
+UsersFrame = LabelFrame(BackGroundFrame,bg="#CBC9EB") 
+UsersChatFrame = LabelFrame(BackGroundFrame,bg="#A4ACFF") 
+UserFunctionFrame1 = LabelFrame(BackGroundFrame,bg="#A4ACFF")
+UserFunctionFrame2 = LabelFrame(BackGroundFrame,bg="#A4ACFF")
+ChatFrame = LabelFrame(BackGroundFrame)
+ChatNameFrame = LabelFrame(BackGroundFrame,bg = "#CBC9EB")
+SendMessageFrame = LabelFrame(BackGroundFrame,bg="#A4ACFF")
+UserFrame = LabelFrame(BackGroundFrame,bg = "#CBC9EB")
+ChatSelectionFrame = LabelFrame(BackGroundFrame,bg="#A4ACFF")
+#label
 welcome = Label(logUser, text="Welcome to Chat Together")
 usernameLabel = Label(logUser, text = "Username")
-idLabel = Label(logUser, text = "ID")
-#dinno variables(Labels)
-UserLabel = Label(UserFrame,text=Username.get(),bg="light blue",fg="white",relief=FLAT)#puts the username in the frame
-ChatNameLabel = Label(ChatNameFrame,text="ChatName",bg="light blue",fg="white",relief=FLAT)#puts the chatname in the frame
-UserOptionsMessage1 = Label(UserFunctionFrame1,bg="light blue",fg="white",relief=FLAT)
-UserOptionsMessage2 = Label(UserFunctionFrame1,bg="light blue",fg="white",relief=FLAT)
-
-SignIn = Button(logUser, text = "Sign In",command=hideId,activebackground = "pink", activeforeground = "blue")
-LogIn = Button(logUser, text = "LogIn",command=showId,activebackground = "pink", activeforeground = "blue")
-Submit = Button(logUser, text="Submit",command=startUser, activebackground="pink", activeforeground="blue")
-#dinno variables
-MessageSender = Button(SendMessageFrame,width=20,relief=FLAT,bg="light blue", image = img_messageSender)
-CreateChatButton = Button(UserFunctionFrame1,relief=FLAT,bg="light blue", text = "Create Chat",command=create)#makes you create a new chat
-LeaveChatButton = Button(UserFunctionFrame1,relief=FLAT,bg="light blue",text = "Leave Chat",command=leave)#makes you leave a new chat
-JoinChatButton = Button(UserFunctionFrame1,relief=FLAT,bg="light blue",text = "Join Chat",command=join)#makes you join a new chat
-SendButton = Button(UserFunctionFrame1,relief=FLAT,bg="light blue",text = "Send Info",command=sent)#makes you send what you put 
-
+passwordLabel = Label(logUser, text = "Password")
+UsersLabel = Label(UsersFrame,text="Users",bg="#CBC9EB",relief=FLAT)
+UserLabel = Label(UserFrame,text='',bg="#CBC9EB",relief=FLAT)
+ChatNameLabel = Label(ChatNameFrame,text="ChatName",bg="#CBC9EB",relief=FLAT)
+#button
+MessageSender = Button(SendMessageFrame,width=20,relief=FLAT,bg="#8EB5F0",command=sendMessage, image = img_messageSender)
+CreateChatButton = Button(UserFunctionFrame1,relief=RAISED,bg="#8EB5F0", text = "Create Chat",command=createChat)
+LeaveChatButton = Button(ChatNameFrame,relief=RAISED,bg="#8EB5F0",text = "Leave Chat",command=quitChat)
+JoinChatButton = Button(UserFunctionFrame1,relief=RAISED,bg="#8EB5F0",text = "Join Chat",command=joinChat)
+SendButton = Button(UserFunctionFrame2,relief=RAISED,bg="#8EB5F0",text = "Submit",command=addChat)
+SignIn = Button(logUser, text = "Sign In",command= lambda: connectUser("signin"),activebackground = "pink", activeforeground = "blue")
+Login = Button(logUser, text = "Log In",command= lambda: connectUser("login"),activebackground = "pink", activeforeground = "blue")
+#enter
+usernameEnter = Entry(logUser,width = 20)
+passwordEnter = Entry(logUser, show='*', width = 20)
+codeEntered = Entry(UserFunctionFrame2, width=20)
+IdNameEnter = Entry(UserFunctionFrame2,width=20)
+messageEntered = Entry(SendMessageFrame,width=60)
 #scrollbar
-canvas = Canvas(ChatFrame,bg="light blue")
-scrollbar = Scrollbar(ChatFrame, orient="vertical",bg="light blue", command=canvas.yview)
-scrollable_frame = Frame(canvas)
-chats = ["ciao"]
+listboxChat = Listbox(ChatFrame, bg="#A4ACFF")
+scrollbarChatY = Scrollbar(ChatFrame, orient=VERTICAL)
+scrollbarChatX = Scrollbar(listboxChat, orient=HORIZONTAL)
+canvasChat = Canvas(ChatFrame,bg="#A4ACFF")
+
+listboxUsers = Listbox(UsersChatFrame, bg="#A4ACFF")
+scrollbarUsers = Scrollbar(UsersChatFrame)
+canvasUsers = Canvas(UsersChatFrame, bg="#A4ACFF")
+
+listboxChats = Listbox(ChatSelectionFrame, bg="#A4ACFF")
+scrollbarChats = Scrollbar(ChatSelectionFrame)
+canvasChats = Canvas(ChatSelectionFrame, bg="#A4ACFF")
+
+listboxChat.config(yscrollcommand=scrollbarChatY.set, xscrollcommand=scrollbarChatX.set)
+scrollbarChatY.config(command= listboxChat.yview)
+scrollbarChatX.config(command= listboxChat.xview)
+
+listboxUsers.config(yscrollcommand = scrollbarUsers.set)
+scrollbarUsers.config(command = listboxUsers.yview)
+
+listboxChats.config(yscrollcommand = scrollbarChats.set)
+scrollbarChats.config(command = listboxChats.yview)
 
 def main():
-    welcome.place(x=120, y=10)
-    usernameLabel.place(x = 30,y = 100)
-    usernaneEnter.place(x = 120, y = 100)  
-    SignIn.place(x = 140, y = 50)  
-    LogIn.place(x = 200, y = 50)
-    Submit.place(x=150, y=160)
-    root.configure(bg='light blue')
-    while True:
-        global chats
-        #Frames
-        BackGroundFrame.pack(fill=BOTH, side=LEFT, expand=True)
-        BackGroundFrame.pack_forget()
-        UserFrame.grid(row=0,column=0, sticky="nsew")
-        ChatSelectionFrame.grid(row=1,column=0,sticky="nsew")
-        ChatNameFrame.grid(row=0,column=1, sticky="nsew")
-        ChatFrame.grid(row=1,column=1,sticky="nsew")
-        UserFunctionFrame1.grid(row=2,column=0,sticky="nsew")
-        SendMessageFrame.grid(row=2,column=1,sticky="nsew")
+    #Start window
+    welcome.place(x= 120, y= 10)
+    SignIn.place(x= 120, y= 120)
+    Login.place(x= 200, y= 120)
+    usernameEnter.place(x = 120, y = 50)
+    usernameLabel.place(x = 30, y = 50)
+    passwordLabel.place(x = 30 , y = 90)
+    passwordEnter.place(x = 120 , y = 90)
+ 
+    UserFrame.grid(row=0,column=0, sticky="nsew")
+    ChatSelectionFrame.grid(row=1,column=0,sticky="nsew")
+    ChatNameFrame.grid(row=0,column=1, sticky="nsew")
+    ChatFrame.grid(row=1,column=1,sticky="nsew")
+    UserFunctionFrame1.grid(row=2,column=0,sticky="nsew")
+    UserFunctionFrame2.grid(row=2,column=2,sticky="nsew")
+    SendMessageFrame.grid(row=2,column=1,sticky="nsew")
+    UsersChatFrame.grid(row=1,column=2,sticky="nsew")
+    UsersFrame.grid(row=0,column=2,sticky="nsew")
 
-        #DropMenu
-        clicked = StringVar()#create a string
-        clicked.set("Select a Chat")
-        dropMenu = OptionMenu(ChatSelectionFrame,clicked,*chats)#add options in dropMenu
-        dropMenu.pack(side=TOP)
+    MessageSender.pack(side=RIGHT)
+    CreateChatButton.pack(fill = X, side=LEFT)
+    LeaveChatButton.pack(fill = X, side=RIGHT)
+    JoinChatButton.pack(fill = X, side=LEFT)
+    SendButton.pack_forget()
+    messageEntered.pack(fill = X,side=LEFT)
+    codeEntered.pack_forget()
+    IdNameEnter.pack_forget()
 
-        #textBox
-        messageEntered.pack(side=LEFT)
-        codeEntered.pack(side=BOTTOM)
-        IdEntered.pack(side=BOTTOM)
+    UserLabel.pack()
+    ChatNameLabel.pack()
+    UsersLabel.pack()
 
-        #button
-        MessageSender.pack(side=LEFT)
-        CreateChatButton.pack(fill = X, side=LEFT)
-        LeaveChatButton.pack(fill = X, side=LEFT)
-        JoinChatButton.pack(fill = X, side=LEFT)
-        SendButton.pack(fill = X, side=BOTTOM)
+    listboxChat.pack(side = LEFT, fill = BOTH, expand=True)
+    scrollbarChatY.pack(side = RIGHT, fill = Y)
+    scrollbarChatX.pack(side = BOTTOM, fill = X)
 
-        #Labels
-        UserLabel.pack()
-        ChatNameLabel.pack()
-        UserOptionsMessage1.place(relx = 0.0,rely = 0.4,anchor = NW)
-        UserOptionsMessage2.place(relx = 0.0,rely = 0.7,anchor = NW)
+    listboxUsers.pack(side = LEFT, fill = BOTH, expand=True)
+    scrollbarUsers.pack(side = RIGHT, fill = Y)
 
-        #Scrollbar
-        scrollable_frame.bind("<Configure>",lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
-        canvas.pack(side="left", fill="both")
-        scrollbar.pack(side="left", fill="both")
-        # chats = user.chats
-        root.mainloop()
-main()
+    listboxChats.pack(side = LEFT, fill = BOTH, expand=True)
+    scrollbarChats.pack(side = RIGHT, fill = Y)
+
+if __name__ == "__main__":
+    main()
+
+while True:
+    try:
+        root.update()
+        if chat != "":
+            getChat()
+    except:
+        pass
