@@ -242,11 +242,11 @@ sendButton = Button(addChatFrame,relief=RAISED,bg="#8EB5F0",text = "Submit",comm
 signin = Button(logUser, text = "SignUp",command= lambda: connectUser("signin"), bg="#8EB5F0", font = test)
 login = Button(logUser, text = "LogIn",command= lambda: connectUser("login"), bg="#8EB5F0", relief=FLAT, font = test)
 #enter
-usernameEnter = Entry(logUser,width = 20)
-passwordEnter = Entry(logUser, show='*', width = 20)
-codeEntered = Entry(addChatFrame, width=20)
-IdNameEnter = Entry(addChatFrame,width=20)
-messageEntered = Entry(sendMessageFrame,width=60)
+usernameEnter = Entry(logUser,width = 20, font=test)
+passwordEnter = Entry(logUser, show='*', width = 20, font=test)
+codeEntered = Entry(addChatFrame, width=20, font=test)
+IdNameEnter = Entry(addChatFrame,width=20, font=test)
+messageEntered = Entry(sendMessageFrame,width=60, font=test)
 
 #scrollbar
 containerChat = Frame(ChatFrame, bg="#A4ACFF")
