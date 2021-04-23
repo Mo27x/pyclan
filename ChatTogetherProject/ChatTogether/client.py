@@ -6,7 +6,7 @@ from _thread import *
 from network import Network
 from user import User
 
-def connectUser(type: str):
+def connectUser(type):
     global user
     global network
     global logged
@@ -249,7 +249,7 @@ messageEntered = Entry(sendMessageFrame,width=60, font=test)
 
 #scrollbar
 containerChat = Frame(ChatFrame, bg="#A4ACFF")
-canvasChat = Canvas(containerChat, bg="#A4ACFF")
+canvasChat = Canvas(containerChat,width=500, bg="#A4ACFF")
 scrollbarChatY = Scrollbar(containerChat, orient="vertical", command=canvasChat.yview, bg="#A4ACFF")
 scrollbarChatX = Scrollbar(ChatFrame, orient="horizontal", command=canvasChat.xview, bg="#A4ACFF")
 scrollableChat_frame = Frame(canvasChat , bg="#A4ACFF")
@@ -275,7 +275,7 @@ canvasChats.pack(side="left", fill="both", expand=True)
 scrollbarChatsY.pack(side="right", fill="y")
 #users
 containerUsers = Frame(usersChatFrame, bg="#A4ACFF")
-canvasUsers = Canvas(containerUsers,width= 100, bg="#A4ACFF")
+canvasUsers = Canvas(containerUsers,width= 150, bg="#A4ACFF")
 scrollbarUsersY = Scrollbar(containerUsers, orient="vertical", command=canvasUsers.yview, bg="#A4ACFF")
 scrollableUsers_frame = Frame(canvasUsers , bg="#A4ACFF")
 scrollableUsers_frame.bind("<Configure>",lambda e: canvasUsers.configure(scrollregion=canvasUsers.bbox("all")))
