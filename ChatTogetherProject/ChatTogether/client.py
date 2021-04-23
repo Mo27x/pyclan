@@ -126,7 +126,7 @@ def sendMessage():
                 printMessages(messages)
                 break
 
-def updateChat(value):
+def updateChat(value:str):
     global chatNameLabel
     global chat
     chat = value
@@ -177,14 +177,14 @@ def quitChat():
             updateChats()
             break
 
-def printUsers(users):
+def printUsers(usernames: list):
     global scrollableUsers_frame
     for widget in scrollableUsers_frame.winfo_children():
         widget.destroy()
-    for username in users:
+    for username in usernames:
         Label(scrollableUsers_frame, text= username, bg="#A4ACFF", font = test).pack()
 
-def printMessages(messages):
+def printMessages(messages: str):
     global scrollableChat_frame
     for widget in scrollableChat_frame.winfo_children():
         widget.destroy()
