@@ -12,7 +12,6 @@ class Chat:
     def addMessage(self, username: str, message: str):
         if username in self.users:
             self.messages.append((str(username) + ": " + str(message)))
-            return True
 
     def getChat(self, username: str):
         if username in self.users:
