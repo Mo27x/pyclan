@@ -29,8 +29,7 @@ def connectUser(type: str):
         else:
             logUser.destroy()
             backgroundFrame.pack(fill=BOTH, side=LEFT, expand=True)
-        Label(userFrame,text=user.username,bg="#CBC9EB",relief=FLAT, font = test).pack(side = LEFT)
-
+            Label(userFrame,text=user.username,bg="#CBC9EB",relief=FLAT, font = test).pack(side = LEFT)
     else:
         messagebox.showerror("Error", "Username must not be empty and its length must be less than 9, Password lenght must be almost 8")
 
@@ -70,14 +69,14 @@ def addChat():
     chatCode = codeEntered.get()
 
     if addChatType == "create":
-        if chatIdName != "" and len(chatIdName) <= 10  and chatCode != "":
+        if chatIdName != "" and len(chatIdName) <= 16  and chatCode != "":
             data = user.createChat(chatIdName, chatCode, network)
             messages = data[0]
             user = data[1]
             users = data[2]
             updateChats()
         else:
-            messagebox.showerror("Adding chat error", "None of the fields must be empty and the lenght of the name of the chat must be less than 11")
+            messagebox.showerror("Adding chat error", "None of the fields must be empty and the lenght of the name of the chat can be almost 16")
     elif addChatType == "join":
         if chatIdName != "" and chatCode != "":
             data = user.joinChat(chatIdName, chatCode, network)
