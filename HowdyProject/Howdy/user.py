@@ -1,21 +1,21 @@
 class User:
-    def __init__(self, username:str, password:str, chats: dict):
+    def __init__(self, username: str, password: str, chats: dict):
         self.username = username
         self.password = password
         self.chats = chats
 
     def signin(self, network):
-        return network.send([self,"signin", -1])
-    
+        return network.send([self, "signin", -1])
+
     def login(self, network):
-        return network.send([self,"login", -1])
+        return network.send([self, "login", -1])
 
     def createChat(self, chatName: str, chatCode: str, network):
         if chatName != "" and chatCode != "":
             return network.send([self, "create", -1, chatName, chatCode])
 
     def joinChat(self, chatId: str, chatCode: str, network):
-        if chatId != ""  and chatCode != "":
+        if chatId != "" and chatCode != "":
             return network.send([self, "join", chatId, chatCode])
 
     def getChat(self, chatId: str, network):
@@ -33,7 +33,7 @@ class User:
     def addChat(self, chatId: str, chatName: str):
         if not chatId in self.chats:
             self.chats[chatId] = chatName
-    
+
     def removeChat(self, chatId: str):
         if chatId in self.chats:
             del self.chats[chatId]

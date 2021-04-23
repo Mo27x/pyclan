@@ -1,12 +1,13 @@
-import socket
-from _thread import *
-import pickle
 import json
-import string
+import pickle
 import random
+import socket
+import string
+import time
+from _thread import *
+
 from chat import Chat
 from user import User
-import time
 
 server = "192.168.1.27"
 port = 5555
@@ -33,15 +34,20 @@ except socket.error as e:
 s.listen()
 print("Waiting for a connection, Server Started")
 
+
 def get_random_id():
     letters = string.ascii_lowercase
     Id = ''.join(random.choice(letters) for i in range(6))
     return Id
-def assembleClass(dictClass: dict):
-    return Chat(dictClass["id"],dictClass["name"],dictClass["code"],dictClass["users"], dictClass["messages"])
 
-def assembleUserClass(dictClass: dict):
+
+def assembleClass(dictClass: dict):
+    return Chat(dictClass["id"], dictClass["name"], dictClass["code"], dictClass["users"], dictClass["messages"])
+
+
+def assembleUserClass(dictClass: dict) -> object:
     return User(dictClass["username"], dictClass["password"], dictClass["chats"])
+
 
 def threaded_client(conn):
     global users
@@ -104,12 +110,12 @@ def threaded_client(conn):
                     reply2 = [user, chat.getUsers(user.username), chat.id]
                     reply.extend(reply2)
                 elif data[1] == "login":
-                    if user.username == users[user.username]["username"] and user.password == users[user.username]["password"]:
+                    if user.username != users[user.username]["username"] or user.password != users[user.username]["password"]:
+                        reply = ["Username or password is wrong", user, logged]
+                    else:
                         user = assembleUserClass(users[user.username])
                         logged = True
                         reply = ["Welcome back to chat together", user, logged]
-                    else:
-                        reply = ["Username or password is wrong", user, logged]
                 elif data[1] == "signin":
                     if user.username in usernames:
                         reply = ["The username you entered still exists", user, logged]
@@ -126,18 +132,20 @@ def threaded_client(conn):
     print("Lost Connection")
     conn.close()
 
+
 def accept_connections():
     while True:
         conn, addr = s.accept()
         print("Connected to: ", addr)
         start_new_thread(threaded_client, (conn,))
 
+
 while True:
     try:
         start_new_thread(accept_connections, ())
         time.sleep(1)
     except KeyboardInterrupt:
-        print("Program termianted")
+        print("Program terminated")
         with open("usernames.txt", "w") as usernamesFile:
             for username in usernames:
                 usernamesFile.write(username + "\n")
@@ -145,7 +153,7 @@ while True:
             for chatId in chatsId:
                 chatsIdFile.write(chatId + "\n")
         with open("chats.json", "w") as chatsFile:
-            json.dump(chats,chatsFile)
+            json.dump(chats, chatsFile)
         with open("users.json", "w") as usersFile:
-            json.dump(users,usersFile)
+            json.dump(users, usersFile)
         exit()

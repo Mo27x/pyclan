@@ -1,5 +1,6 @@
-import socket
 import pickle
+import socket
+
 
 class Network:
     def __init__(self):

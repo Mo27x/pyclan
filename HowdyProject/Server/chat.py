@@ -6,8 +6,6 @@ class Chat:
             self.code = code
             self.users = users
             self.messages = messages
-        else:
-            return None
 
     def addMessage(self, username: str, message: str):
         if username in self.users:
@@ -23,11 +21,11 @@ class Chat:
             return True
         else:
             return False
-    
+
     def removeUser(self, username: str):
         if username in self.users:
             self.users.remove(username)
-    
+
     def getUsers(self, username: str):
         if username in self.users:
             return self.users
