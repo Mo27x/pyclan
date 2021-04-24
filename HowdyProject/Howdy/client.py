@@ -36,6 +36,7 @@ def connectUser(type):
         messagebox.showerror("Error",
                              "Username must not be empty and its length must be less than 9, Password lenght must be almost 8")
 
+
 def joinChat():
     global addChatType
     addChatType = "join"
@@ -340,11 +341,7 @@ if __name__ == "__main__":
     main()
 
 while True:
-    # noinspection PyBroadException
-    try:
-        root.update()
-        if chat != "":
-            getChat()
-        root.update_idletasks()
-    except:
-        pass
+    root.update()
+    if chat != "":
+        getChat()
+    root.update_idletasks()

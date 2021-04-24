@@ -102,7 +102,7 @@ def threaded_client(conn):
                     chatId = get_random_id()
                     while chatId in chatsId:
                         chatId = get_random_id()
-                    chat = Chat(chatId, data[3], data[4], [user.username], ["Let's groove chatting on Howdy"])
+                    chat = Chat(chatId, data[3], data[4], user.username, ["Let's groove chatting on Howdy"])
                     chats[chat.id] = chat.__dict__
                     user.addChat(chat.id, chat.name)
                     chatsId.append(chat.id)
@@ -110,7 +110,8 @@ def threaded_client(conn):
                     reply2 = [user, chat.getUsers(user.username), chat.id]
                     reply.extend(reply2)
                 elif data[1] == "login":
-                    if user.username != users[user.username]["username"] or user.password != users[user.username]["password"]:
+                    if user.username != users[user.username]["username"] or user.password != users[user.username][
+                        "password"]:
                         reply = ["Username or password is wrong", user, logged]
                     else:
                         user = assembleUserClass(users[user.username])
