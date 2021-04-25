@@ -102,7 +102,7 @@ def threaded_client(conn):
                     chatId = get_random_id()
                     while chatId in chatsId:
                         chatId = get_random_id()
-                    chat = Chat(chatId, data[3], data[4], user.username, ["Let's groove chatting on Howdy"])
+                    chat = Chat(chatId, data[3], data[4], [user.username], ["Let's groove chatting on Howdy"])
                     chats[chat.id] = chat.__dict__
                     user.addChat(chat.id, chat.name)
                     chatsId.append(chat.id)

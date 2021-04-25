@@ -32,6 +32,8 @@ def connectUser(type):
             logUser.destroy()
             backgroundFrame.pack(fill=BOTH, side=LEFT, expand=True)
             Label(userFrame, text=user.username, bg="#CBC9EB", relief=FLAT, font=test).pack(side=LEFT)
+            if chat != "":
+                leaveChatButton.pack(fill=X, side=RIGHT)
     else:
         messagebox.showerror("Error",
                              "Username must not be empty and its length must be less than 9, Password lenght must be almost 8")
@@ -146,6 +148,7 @@ def updateChat(value: str):
             ChatsId = chatId
     getChat()
     chatNameLabel.destroy()
+    leaveChatButton.pack(fill=X, side=RIGHT)
     chatNameLabel = Label(chatNameFrame, text=("Chat Name: " + chat + " Chat Id: " + ChatsId), bg="#CBC9EB",
                           relief=FLAT, font=test)
     chatNameLabel.pack()
@@ -187,6 +190,7 @@ def quitChat():
             chatNameLabel.pack()
             for widget in scrollableChat_frame.winfo_children():
                 widget.destroy()
+            leaveChatButton.pack_forget()
             updateChats()
             break
 
@@ -329,7 +333,6 @@ def main():
 
     messageSender.pack(side=RIGHT)
     createChatButton.pack(fill=X, side=LEFT)
-    leaveChatButton.pack(fill=X, side=RIGHT)
     joinChatButton.pack(fill=X, side=LEFT)
     sendButton.pack_forget()
     messageEntered.pack(fill=X, side=LEFT, expand=True)
@@ -341,7 +344,10 @@ if __name__ == "__main__":
     main()
 
 while True:
-    root.update()
-    if chat != "":
-        getChat()
-    root.update_idletasks()
+    try:
+        root.update()
+        if chat != "":
+            getChat()
+        root.update_idletasks()
+    except:
+        break
