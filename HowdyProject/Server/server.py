@@ -110,13 +110,14 @@ def threaded_client(conn):
                     reply2 = [user, chat.getUsers(user.username), chat.id]
                     reply.extend(reply2)
                 elif data[1] == "login":
-                    if user.username != users[user.username]["username"] or user.password != users[user.username][
-                        "password"]:
-                        reply = ["Username or password is wrong", user, logged]
+                    if user.username in usernames:
+                        if user.username == users[user.username]["username"] and user.password == users[user.username][
+                            "password"]:
+                            user = assembleUserClass(users[user.username])
+                            logged = True
+                            reply = ["Welcome back to chat together", user, logged]
                     else:
-                        user = assembleUserClass(users[user.username])
-                        logged = True
-                        reply = ["Welcome back to chat together", user, logged]
+                        reply = ["Username or password is wrong", user, logged]
                 elif data[1] == "signin":
                     if user.username in usernames:
                         reply = ["The username you entered still exists", user, logged]

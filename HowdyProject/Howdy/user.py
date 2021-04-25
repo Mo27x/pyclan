@@ -29,11 +29,3 @@ class User:
     def quitChat(self, chatId: str, network):
         if chatId != "":
             return network.send([self, "quit", chatId])
-
-    def addChat(self, chatId: str, chatName: str):
-        if not chatId in self.chats:
-            self.chats[chatId] = chatName
-
-    def removeChat(self, chatId: str):
-        if chatId in self.chats:
-            del self.chats[chatId]
