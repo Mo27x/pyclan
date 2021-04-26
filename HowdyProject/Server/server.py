@@ -116,6 +116,8 @@ def threaded_client(conn):
                             user = assembleUserClass(users[user.username])
                             logged = True
                             reply = ["Welcome back to chat together", user, logged]
+                        else:
+                            reply = ["Username or password is wrong", user, logged]        
                     else:
                         reply = ["Username or password is wrong", user, logged]
                 elif data[1] == "signin":
